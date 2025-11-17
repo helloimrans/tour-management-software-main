@@ -120,7 +120,6 @@ body {
 .custom-table thead th {
     font-weight: 600;
     font-size: 13px;
-    text-transform: uppercase;
     letter-spacing: 0.5px;
     padding: 1rem 0.75rem;
     border: none;
