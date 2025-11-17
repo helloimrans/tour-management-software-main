@@ -6,16 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Services\RoleService;
 use App\Models\Permission;
 use App\Models\Role;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class RoleController extends Controller
 {
-    const VIEW_PATH = 'admin.roles.';
-
     protected RoleService $roleService;
 
     public function __construct(RoleService $roleService)
@@ -23,118 +17,132 @@ class RoleController extends Controller
         $this->roleService = $roleService;
     }
 
-    public function index(): View
+    public function index()
     {
-        return \view(self::VIEW_PATH . 'browse');
+        return view('admin.roles.browse');
     }
 
-    public function create(): View
+    public function create()
     {
         $role = new Role();
-        return \view(self::VIEW_PATH . 'edit-add', compact('role'));
+        return view('admin.roles.edit-add', compact('role'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        $input = $request->all();
-
-        $trimmedInput = array_map('trim', $input);
-
-        $validatedData = $this->roleService->validator($trimmedInput)->validate();
-
         try {
+            $validatedData = $request->validate([
+                'display_name' => ['required', 'string', 'max:255'],
+                'name' => ['required', 'string', 'max:191', 'unique:roles,name'],
+                'description' => ['nullable', 'string'],
+            ]);
+
             $this->roleService->createRole($validatedData);
-        } catch (\Throwable $exception) {
-            Log::debug($exception->getMessage());
-            return back()->with([
-                'message' => "Something went wrong!",
-                'alert-type' => 'error'
-            ]);
+
+            return redirect()
+                ->route('roles.index')
+                ->with([
+                    'message' => 'Role created successfully.',
+                    'alert-type' => 'success',
+                ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->errors())
+                ->withInput();
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to create role. Please try again.'])
+                ->withInput();
         }
-
-        return redirect()->route('roles.index')->with([
-            'message' => "Successfully created",
-            'alert-type' => 'success'
-        ]);
     }
 
-    public function show(Role $role): View
+    public function show(Role $role)
     {
-        return \view(self::VIEW_PATH . 'read', compact('role'));
+        return view('admin.roles.read', compact('role'));
     }
 
-    public function edit(Role $role): View
+    public function edit(Role $role)
     {
-        return \view(self::VIEW_PATH . 'edit-add', compact('role'));
+        return view('admin.roles.edit-add', compact('role'));
     }
 
-    public function update(Request $request, Role $role): RedirectResponse
+    public function update(Request $request, Role $role)
     {
-        $validatedData = $this->roleService->validator($request->all(), $role->id)->validate();
-
         try {
-            $this->roleService->updateRole($role, $validatedData);
-        } catch (\Throwable $exception) {
-            Log::debug($exception->getMessage());
-            return back()->with([
-                'message' => "Something went wrong!",
-                'alert-type' => 'error'
+            $validatedData = $request->validate([
+                'display_name' => ['required', 'string', 'max:255'],
+                'name' => ['required', 'string', 'max:191', 'unique:roles,name,' . $role->id],
+                'description' => ['nullable', 'string'],
             ]);
-        }
 
-        return back()->with([
-            'message' => "Successfully updated",
-            'alert-type' => 'success'
-        ]);
+            $this->roleService->updateRole($role, $validatedData);
+
+            return redirect()
+                ->back()
+                ->with([
+                    'message' => 'Role updated successfully.',
+                    'alert-type' => 'success',
+                ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->errors())
+                ->withInput();
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to update role. Please try again.'])
+                ->withInput();
+        }
     }
 
-    public function destroy(Role $role): RedirectResponse
+    public function destroy(Role $role)
     {
         try {
             $this->roleService->deleteRole($role);
-        } catch (\Throwable $exception) {
-            Log::debug($exception->getMessage());
-            return back()->with([
-                'message' => "Something went wrong!",
-                'alert-type' => 'error'
-            ]);
-        }
 
-        return back()->with([
-            'message' => "Successfully deleted",
-            'alert-type' => 'success'
-        ]);
+            return redirect()
+                ->back()
+                ->with([
+                    'message' => 'Role deleted successfully.',
+                    'alert-type' => 'success',
+                ]);
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to delete role. Please try again.']);
+        }
     }
 
-    public function getDatatable(Request $request): JsonResponse
+    public function getDatatable(Request $request)
     {
         return $this->roleService->getListDataForDatatable($request);
     }
 
-    public function rolePermissionIndex(Role $role): View
+    public function rolePermissionIndex(Role $role)
     {
         $permissionsGroupByTable = Permission::all()->groupBy('group_name');
-
-        return \view(self::VIEW_PATH . 'permissions', compact('role', 'permissionsGroupByTable'));
+        return view('admin.roles.permissions', compact('role', 'permissionsGroupByTable'));
     }
 
-    public function rolePermissionSync(Request $request, Role $role): RedirectResponse
+    public function rolePermissionSync(Request $request, Role $role)
     {
-        $permissions = $request->input('permissions', []);
-
         try {
+            $permissions = $request->input('permissions', []);
             $this->roleService->syncRolePermission($role, $permissions);
-        } catch (\Throwable $exception) {
-            Log::debug($exception->getMessage());
-            return back()->with([
-                'message' => "Something went wrong!",
-                'alert-type' => 'error'
-            ]);
-        }
 
-        return back()->with([
-            'message' => "Successfully updated",
-            'alert-type' => 'success'
-        ]);
+            return redirect()
+                ->back()
+                ->with([
+                    'message' => 'Permissions updated successfully.',
+                    'alert-type' => 'success',
+                ]);
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to update permissions. Please try again.']);
+        }
     }
 }

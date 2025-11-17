@@ -32,7 +32,12 @@ class TourController extends Controller
     public function store(Request $request)
     {
         try {
-            $validatedData = $this->tourService->validator($request->all());
+            $validatedData = $request->validate([
+                'name' => ['required', 'string', 'max:191'],
+                'description' => ['nullable', 'string'],
+                'image' => ['nullable', 'mimes:jpg,jpeg,png,webp,svg,gif', 'max:5120'],
+            ]);
+
             $this->tourService->store($validatedData);
 
             return redirect()
@@ -66,7 +71,12 @@ class TourController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $validatedData = $this->tourService->validator($request->all(), $id);
+            $validatedData = $request->validate([
+                'name' => ['required', 'string', 'max:191'],
+                'description' => ['nullable', 'string'],
+                'image' => ['nullable', 'mimes:jpg,jpeg,png,webp,svg,gif', 'max:5120'],
+            ]);
+
             $this->tourService->update($id, $validatedData);
 
             return redirect()
@@ -106,4 +116,3 @@ class TourController extends Controller
         }
     }
 }
-

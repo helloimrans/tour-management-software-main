@@ -6,26 +6,10 @@ use App\Helpers\Classes\AuthHelper;
 use App\Models\Tour;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class TourService
 {
-    public function validator(array $data, ?int $id = null): array
-    {
-        $rules = [
-            'name' => ['required', 'string', 'max:191'],
-            'description' => ['nullable', 'string'],
-            'image' => [
-                'nullable',
-                'mimes:jpg,jpeg,png,webp,svg,gif',
-                'max:5120',
-            ],
-        ];
-
-        return Validator::make($data, $rules)->validate();
-    }
-
     public function getAll()
     {
         return Tour::with(['createdBy', 'updatedBy'])
@@ -146,4 +130,3 @@ class TourService
             ->make(true);
     }
 }
-

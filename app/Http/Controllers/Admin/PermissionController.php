@@ -5,16 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\PermissionService;
 use App\Models\Permission;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class PermissionController extends Controller
 {
-    const VIEW_PATH = 'admin.permissions.';
-
     protected PermissionService $permissionService;
 
     public function __construct(PermissionService $permissionService)
@@ -22,90 +16,106 @@ class PermissionController extends Controller
         $this->permissionService = $permissionService;
     }
 
-    public function index(): View
+    public function index()
     {
-        return \view(self::VIEW_PATH . 'browse');
+        return view('admin.permissions.browse');
     }
 
-    public function create(): View
+    public function create()
     {
         $permission = new Permission();
-        return \view(self::VIEW_PATH . 'edit-add', compact('permission'));
+        return view('admin.permissions.edit-add', compact('permission'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        $postData = $request->only(array_keys($this->permissionService->validationRules()));
-
-        $this->permissionService->validator($postData)->validate();
-
         try {
-            $this->permissionService->createPermission($postData);
-        } catch (\Throwable $exception) {
-            Log::debug($exception->getMessage());
-            return back()->with([
-                'message' => "Something went wrong!",
-                'alert-type' => 'error'
+            $validatedData = $request->validate([
+                'name' => ['required', 'string', 'max:191', 'unique:permissions,name'],
+                'display_name' => ['required', 'string', 'max:255'],
+                'group_name' => ['required', 'string', 'max:255'],
             ]);
+
+            $this->permissionService->createPermission($validatedData);
+
+            return redirect()
+                ->back()
+                ->with([
+                    'message' => 'Permission created successfully.',
+                    'alert-type' => 'success',
+                ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->errors())
+                ->withInput();
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to create permission. Please try again.'])
+                ->withInput();
         }
-
-        return back()->with([
-            'message' => "Successfully created",
-            'alert-type' => 'success'
-        ]);
     }
 
-    public function show(Permission $permission): View
+    public function show(Permission $permission)
     {
-        return \view(self::VIEW_PATH . 'read', compact('permission'));
+        return view('admin.permissions.read', compact('permission'));
     }
 
-    public function edit(Permission $permission): View
+    public function edit(Permission $permission)
     {
-        return \view(self::VIEW_PATH . 'edit-add', compact('permission'));
+        return view('admin.permissions.edit-add', compact('permission'));
     }
 
-    public function update(Request $request, Permission $permission): RedirectResponse
+    public function update(Request $request, Permission $permission)
     {
-        $postData = $request->only(array_keys($this->permissionService->validationRules()));
-
-        $this->permissionService->validator($postData, $permission->id)->validate();
-
         try {
-            $this->permissionService->updatePermission($permission, $postData);
-        } catch (\Throwable $exception) {
-            Log::debug($exception->getMessage());
-            return back()->with([
-                'message' => "Something went wrong!",
-                'alert-type' => 'error'
+            $validatedData = $request->validate([
+                'name' => ['required', 'string', 'max:191', 'unique:permissions,name,' . $permission->id],
+                'display_name' => ['required', 'string', 'max:255'],
+                'group_name' => ['required', 'string', 'max:255'],
             ]);
-        }
 
-        return back()->with([
-            'message' => "Successfully updated",
-            'alert-type' => 'success'
-        ]);
+            $this->permissionService->updatePermission($permission, $validatedData);
+
+            return redirect()
+                ->back()
+                ->with([
+                    'message' => 'Permission updated successfully.',
+                    'alert-type' => 'success',
+                ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->errors())
+                ->withInput();
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to update permission. Please try again.'])
+                ->withInput();
+        }
     }
 
-    public function destroy(Permission $permission): RedirectResponse
+    public function destroy(Permission $permission)
     {
         try {
             $this->permissionService->deletePermission($permission);
-        } catch (\Throwable $exception) {
-            Log::debug($exception->getMessage());
-            return back()->with([
-                'message' => "Something went wrong!",
-                'alert-type' => 'error'
-            ]);
-        }
 
-        return back()->with([
-            'message' => "Successfully deleted",
-            'alert-type' => 'success'
-        ]);
+            return redirect()
+                ->back()
+                ->with([
+                    'message' => 'Permission deleted successfully.',
+                    'alert-type' => 'success',
+                ]);
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to delete permission. Please try again.']);
+        }
     }
 
-    public function getDatatable(Request $request): JsonResponse
+    public function getDatatable(Request $request)
     {
         return $this->permissionService->getListDataForDatatable($request);
     }

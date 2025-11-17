@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\UserService;
 
-
 class UserController extends Controller
 {
     protected UserService $userService;
@@ -20,6 +19,7 @@ class UserController extends Controller
         if (request()->ajax()) {
             return $this->userService->datatable();
         }
+
         return view('admin.user.index');
     }
 }

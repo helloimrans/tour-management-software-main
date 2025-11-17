@@ -17,12 +17,12 @@ class StatusController extends Controller
             'column' => 'nullable|string',
         ]);
 
-        $table = $request->table;
-        $id = $request->id;
-        $status = $request->status;
-        $column = $request->column ?? 'is_active';
-
         try {
+            $table = $request->table;
+            $id = $request->id;
+            $status = $request->status;
+            $column = $request->column ?? 'is_active';
+
             DB::table($table)->where('id', $id)->update([$column => $status]);
 
             return response()->json([
@@ -37,4 +37,3 @@ class StatusController extends Controller
         }
     }
 }
-
