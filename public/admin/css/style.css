@@ -16,6 +16,37 @@ body {
     height: 2.2rem;
     line-height: 17px;
 }
+/* Form Label Styling */
+.form-label,
+label:not(.form-check-label):not(.custom-file-label) {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+/* Sidebar Navigation Styling */
+.sidebar-dark-primary .nav-sidebar .nav-link,
+.sidebar-dark-primary .nav-sidebar .nav-link p {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.sidebar-dark-primary .nav-sidebar .nav-treeview .nav-link {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Sidebar Icon Font Size */
+.sidebar-dark-primary .nav-sidebar .nav-link .nav-icon,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link > .nav-icon {
+    font-size: 1rem !important;
+}
+
+.sidebar-dark-primary .nav-sidebar .nav-treeview .nav-link .nav-icon {
+    font-size: 0.9rem !important;
+}
+
 /* replace admin lte css */
 .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
 .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
@@ -119,7 +150,7 @@ body {
 
 .custom-table thead th {
     font-weight: 600;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 0.5px;
     padding: 1rem 0.75rem;
     border: none;
@@ -129,8 +160,8 @@ body {
 .custom-table tbody td {
     padding: 0.875rem 0.75rem;
     border-bottom: 1px solid #f3f4f6;
-    color: #374151;
-    font-size: 14px;
+    color: #0f172a;
+    font-size: 13px;
     vertical-align: middle;
 }
 
@@ -676,65 +707,98 @@ body {
 
 /* Info Box Modern Design */
 .info-box {
-    background: #fff;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     border: 1px solid #e5e7eb;
     transition: all 0.3s ease;
     height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .info-box:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     transform: translateY(-4px);
+    border-color: #cbd5e1;
+}
+
+.info-box:hover::before {
+    opacity: 1;
 }
 
 .info-box-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
     margin-bottom: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    color: #fff;
+}
+
+.info-box:hover .info-box-icon {
+    transform: scale(1.05) rotate(5deg);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 .info-box-icon.bg-info {
     background: linear-gradient(135deg, #0c4a6e 0%, #075985 100%);
-    box-shadow: 0 4px 12px rgba(12, 74, 110, 0.3);
+    box-shadow: 0 4px 12px rgba(12, 74, 110, 0.4);
 }
 
 .info-box-icon.bg-danger {
     background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
-    box-shadow: 0 4px 12px rgba(127, 29, 29, 0.3);
+    box-shadow: 0 4px 12px rgba(127, 29, 29, 0.4);
 }
 
 .info-box-icon.bg-success {
     background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
-    box-shadow: 0 4px 12px rgba(6, 78, 59, 0.3);
+    box-shadow: 0 4px 12px rgba(6, 78, 59, 0.4);
 }
 
 .info-box-icon.bg-warning {
     background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
-    box-shadow: 0 4px 12px rgba(120, 53, 15, 0.3);
+    box-shadow: 0 4px 12px rgba(120, 53, 15, 0.4);
+}
+
+.info-box-content {
+    display: flex;
+    flex-direction: column;
 }
 
 .info-box-text {
-    font-size: 13px;
-    color: #6b7280;
-    font-weight: 500;
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 0.5rem;
 }
 
 .info-box-number {
-    font-size: 1.75rem;
+    font-size: 32px;
     font-weight: 700;
-    color: #1f2937;
+    color: #0f172a;
+    margin-top: 0;
+    line-height: 1.2;
 }
 
 /* Form Controls Modern Design */
