@@ -1,8 +1,7 @@
 @extends('layouts.admin.master')
-@section('title', 'User List')
+@section('title', 'Admin Users List')
 
 @push('css')
-    <!-- You can add custom CSS here -->
 @endpush
 
 @section('content')
@@ -13,7 +12,7 @@
                     <div class="card dashboard-custom-card">
                         <div class="card-body">
                             <div class="custom-card-header d-flex justify-content-between">
-                                <h4>Admin Users  List</h4>
+                                <h4>Admin Users List</h4>
                                 @permission('admin-user-create')
                                 <a href="{{ route('admin.user.create') }}" class="btn btn-primary">
                                     <i class="fa fa-plus-circle"></i> Add New
@@ -34,13 +33,12 @@
 
 @push('js')
     <script>
-        var table;
         $(function() {
-            table = $('.datatable').DataTable({
+            $('.datatable').DataTable({
                 processing: true,
                 responsive: true,
                 serverSide: true,
-                scrollX:true,
+                scrollX: true,
                 ajax: "{{ route('admin.user.index') }}",
                 columns: [
                     {
@@ -51,7 +49,6 @@
                         },
                         searchable: false,
                         orderable: false,
-                        visible: true
                     },
                     {
                         title: 'Radio Station',
@@ -69,7 +66,6 @@
                         title: 'Email',
                         data: 'email'
                     },
-
                     {
                         title: 'Phone',
                         data: 'phone'
@@ -80,26 +76,31 @@
                     },
                     {
                         title: 'Profile Pic',
-                        data: 'profile_pic'
+                        data: 'profile_pic',
+                        orderable: false,
+                        searchable: false,
                     },
                     {
                         title: 'Status',
-                        data: 'status'
+                        data: 'status',
+                        orderable: false,
+                        searchable: false,
                     },
                     {
                         title: 'Created By',
-                        data: 'created_by_name'
+                        data: 'created_by_name',
+                        orderable: false,
                     },
                     {
                         title: 'Updated By',
-                        data: 'updated_by_name'
+                        data: 'updated_by_name',
+                        orderable: false,
                     },
                     {
                         title: "Action",
                         data: "action",
                         orderable: false,
                         searchable: false,
-                        visible: true
                     }
                 ]
             });

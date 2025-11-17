@@ -1,37 +1,44 @@
 <?php
 
-
-
 namespace App\Services;
 
 use App\Helpers\Classes\AuthHelper;
-use App\Models\FavouriteMusic;
-use App\Models\Music;
-use App\Models\MusicCategory;
-use App\Models\Service;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdminUserService
 {
-    public function validator(array $data, $id = null)
+    public function validator(array $data, ?int $id = null): array
     {
         $rules = [
-            'first_name' => 'required|max:191',
-            'last_name' => 'nullable|string|max:191',
-            'phone' => 'required|regex:/^(01[3-9]\d{8})$/|unique:users,phone,' . $id,
-            'email' => 'required|email|unique:users,email,' . $id,
-            'profile_pic' => 'nullable|mimes:jpg,jpeg,png,webp,svg,gif|max:5120',
-            'password' => $id ? 'nullable|min:5' : 'required|min:5',
-            'radio_station_id' => ['nullable', 'integer'],
-            'role_id' => [
-                'bail',
+            'first_name' => ['required', 'string', 'max:191'],
+            'last_name' => ['nullable', 'string', 'max:191'],
+            'phone' => [
                 'required',
+                'regex:/^(01[3-9]\d{8})$/',
+                'unique:users,phone,' . $id,
             ],
+            'email' => [
+                'required',
+                'email',
+                'max:191',
+                'unique:users,email,' . $id,
+            ],
+            'profile_pic' => [
+                'nullable',
+                'mimes:jpg,jpeg,png,webp,svg,gif',
+                'max:5120',
+            ],
+            'password' => $id
+                ? ['nullable', 'string', 'min:5']
+                : ['required', 'string', 'min:5'],
+            'radio_station_id' => ['nullable', 'integer', 'exists:radio_stations,id'],
+            'role_id' => ['required', 'array', 'min:1'],
+            'role_id.*' => ['required', 'integer', 'exists:roles,id'],
         ];
 
         return Validator::make($data, $rules)->validate();
@@ -39,61 +46,83 @@ class AdminUserService
 
     public function getAll()
     {
-        return User::with(['createdBy', 'updatedBy'])->where('user_type', User::ADMIN_USER_CODE)->latest()->get();
+        return User::with(['createdBy', 'updatedBy'])
+            ->where('user_type', User::ADMIN_USER_CODE)
+            ->latest()
+            ->get();
     }
 
-
-
-    public function store($input)
+    public function store(array $input): User
     {
-        $roles = $input['role_id'];
-
         if (isset($input['profile_pic'])) {
-            $input['profile_pic'] = $this->storeFile($input['profile_pic'], 'profile_pic');
+            $input['profile_pic'] = uploadFile($input['profile_pic'], 'profile_pic');
         }
-        $input['created_by'] = Auth::user()->id ?? null;
+
+        if (isset($input['password'])) {
+            $input['password'] = Hash::make($input['password']);
+        }
+
         $input['user_type'] = User::ADMIN_USER_CODE;
-        $user =  User::create($input);
-        $user->syncRoles($roles);
-    }
+        $input['created_by'] = Auth::id();
 
-
-    public function show($id)
-    {
-        $data = User::where('user_type', User::ADMIN_USER_CODE)->findOrFail($id);
-        return $data;
-    }
-
-    public function update($id, $input)
-    {
         $roles = $input['role_id'];
+        unset($input['role_id']);
 
-        $data = User::find($id);
-        $input['updated_by'] = Auth::user()->id ?? null;
-        if (!isset($input['password'])) {
+        $user = User::create($input);
+        $user->syncRoles($roles);
+
+        return $user;
+    }
+
+    public function show(int $id): User
+    {
+        return User::with(['roles', 'radioStation'])
+            ->where('user_type', User::ADMIN_USER_CODE)
+            ->findOrFail($id);
+    }
+
+    public function update(int $id, array $input): User
+    {
+        $user = User::where('user_type', User::ADMIN_USER_CODE)
+            ->findOrFail($id);
+
+        if (isset($input['password']) && !empty($input['password'])) {
+            $input['password'] = Hash::make($input['password']);
+        } else {
             unset($input['password']);
         }
+
         if (isset($input['profile_pic'])) {
-            if ($data->profile_pic) {
-                deleteFile($data['profile_pic']);
+            if ($user->profile_pic) {
+                deleteFile($user->profile_pic);
             }
             $input['profile_pic'] = uploadFile($input['profile_pic'], 'profile_pic');
         }
 
-        $data->update($input);
+        $input['updated_by'] = Auth::id();
 
-        $userRoles = $data->roles()->pluck('name')->toArray();
-        $data->removeRoles($userRoles);
-        $data->syncRoles($roles);
-        return $data;
+        $roles = $input['role_id'] ?? [];
+        unset($input['role_id']);
+
+        $user->update($input);
+        $user->syncRoles($roles);
+
+        return $user->fresh();
     }
 
-    public function delete($id)
+    public function delete(int $id): bool
     {
-        $data = User::find($id);
-        $data->deleted_by = Auth::user()->id ?? null;
-        $data->save();
-        $data->delete();
+        $user = User::where('user_type', User::ADMIN_USER_CODE)
+            ->findOrFail($id);
+
+        if ($user->profile_pic) {
+            deleteFile($user->profile_pic);
+        }
+
+        $user->deleted_by = Auth::id();
+        $user->save();
+        $user->delete();
+
         return true;
     }
 
@@ -101,65 +130,70 @@ class AdminUserService
     {
         $authUser = AuthHelper::getAuthUser();
 
-        $data = User::with(['createdBy', 'updatedBy', 'radioStation:id,name'])->adminUser()->latest();
+        $data = User::with(['createdBy', 'updatedBy', 'radioStation:id,name', 'roles'])
+            ->adminUser()
+            ->latest();
+
         return DataTables::of($data)
             ->addColumn('created_by_name', function ($row) {
-                return $row->createdBy->name;
+                return $row->createdBy->first_name . ' ' . ($row->createdBy->last_name ?? '') ?? '-';
             })
             ->addColumn('updated_by_name', function ($row) {
-                return $row->updatedBy->name;
+                return $row->updatedBy->first_name . ' ' . ($row->updatedBy->last_name ?? '') ?? '-';
             })
             ->addColumn('radio_station', function ($row) {
-                return $row->radioStation->name ?? 'All Radio Station';
+                return $row->radioStation->name ?? 'All Radio Stations';
             })
             ->addColumn('roles', function ($user) {
-                return $user->roles->pluck('display_name')->implode(', ');
+                return $user->roles->pluck('display_name')->implode(', ') ?: '-';
             })
             ->editColumn('profile_pic', function ($row) {
-                $imageUrl = $row->profile_pic ? Storage::url($row->profile_pic) : asset('defaults/noimage/no_img.jpg');
-                $profilePic = '<img src= "' . $imageUrl . '" alt="' . $row->name . '" width="70">';
-                return $profilePic;
+                $imageUrl = $row->profile_pic
+                    ? Storage::url($row->profile_pic)
+                    : asset('defaults/noimage/no_img.jpg');
+                return '<img src="' . $imageUrl . '" alt="Profile" width="70" height="70" style="object-fit: cover; border-radius: 5px;">';
             })
             ->editColumn('status', function ($row) use ($authUser) {
-                $checkStatus = $row->status ? 'checked' : '';
-                $status =  '<div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input change-status-checkbox" id="customSwitch' . $row->id . '" data-id="' . $row->id . '" ' . $checkStatus . '>
-                            <label class="custom-control-label" for="customSwitch' . $row->id . '"></label>
-                         </div>';
-                if ($authUser->hasPermission('admin-user-change-status')) {
-                    return $status;
+                if (!$authUser->hasPermission('admin-user-change-status')) {
+                    return '-';
                 }
+
+                $checked = $row->status ? 'checked' : '';
+                $switchId = 'customSwitch' . $row->id;
+
+                return '<div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input change-status-checkbox"
+                           id="' . $switchId . '" data-id="' . $row->id . '" ' . $checked . '>
+                    <label class="custom-control-label" for="' . $switchId . '"></label>
+                </div>';
             })
             ->addColumn('action', function ($row) use ($authUser) {
-                $str = '';
-                $editRoute = route('admin.user.edit', $row->id);
-                $deleteUrl = route('admin.user.destroy', $row->id);
+                $actions = '';
 
-                $formId = 'delForm-' . $row->id;
                 if ($authUser->hasPermission('admin-user-update')) {
-                    $str .= '<a href="' . $editRoute . '" class="btn bg-gradient-primary btn-xs mx-1"><i class="fas fa-edit"></i> EDIT</a>';
+                    $editUrl = route('admin.user.edit', $row->id);
+                    $actions .= '<a href="' . $editUrl . '" class="btn bg-gradient-primary btn-xs mx-1">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>';
                 }
 
                 if ($authUser->hasPermission('admin-user-delete')) {
-                    $str .= '<form class="d-inline" id="' . $formId . '" action="' . $deleteUrl . '" method="POST">' .
-                        csrf_field() .
-                        method_field("DELETE") .
-                        '<button type="button" class="btn bg-gradient-danger btn-xs mx-1" onclick="confirmDelete(\'' . $formId . '\')"><i class="far fa-trash-alt"></i> Delete</button>' .
-                        '</form>';
+                    $deleteUrl = route('admin.user.destroy', $row->id);
+                    $formId = 'delForm-' . $row->id;
+
+                    $actions .= '<form class="d-inline" id="' . $formId . '" action="' . $deleteUrl . '" method="POST">
+                        ' . csrf_field() . '
+                        ' . method_field('DELETE') . '
+                        <button type="button" class="btn bg-gradient-danger btn-xs mx-1"
+                                onclick="confirmDelete(\'' . $formId . '\')">
+                            <i class="far fa-trash-alt"></i> Delete
+                        </button>
+                    </form>';
                 }
 
-                return $str;
+                return $actions ?: '-';
             })
-            ->rawColumns(['action', 'status', 'created_by_name', 'updated_by_name', 'profile_pic', 'radio_station'])
+            ->rawColumns(['action', 'status', 'profile_pic'])
             ->make(true);
-    }
-    private function storeFile($file, $directory): string
-    {
-        return $file->store($directory, 'public');
-    }
-
-    private function deleteFile($filePath): void
-    {
-        Storage::delete($filePath);
     }
 }
