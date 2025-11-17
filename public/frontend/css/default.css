@@ -1,6 +1,6 @@
 
 .custom-color-primary {
-    color: #00153E !important;
+    color: #0f172a !important;
 }
 
 .custom-color-danger {
@@ -12,10 +12,10 @@
 }
 
 .custom-bg-blue {
-    background: #00153E !important;
+    background: #0f172a !important;
 }
 .custom-color-blue {
-    color: #00153E !important;
+    color: #0f172a !important;
 }
 
 .custom-bg-danger {
@@ -121,7 +121,7 @@
 }
 
 .custom-bg-primary {
-    background: #00153E !important;
+    background: #0f172a !important;
 }
 
 .padding-30{
@@ -193,12 +193,12 @@
 }
 
 :root {
-    --custom-color-primary: #00153E;
+    --custom-color-primary: #0f172a;
     --custom-color-secondary: #228BC8;
     --custom-color-info: #006d75;
     --custom-color-warning: #ffc107;
     --custom-color-danger: #D55D69;
-    --custom-color-blue: #00153E;
+    --custom-color-blue: #0f172a;
     --custom-color-yellow: #F79522;
     --shadow: 0px 8px 20px -5px #ddd;
     --shadow-hover: 0px 10px 15px 0px #ddd;
