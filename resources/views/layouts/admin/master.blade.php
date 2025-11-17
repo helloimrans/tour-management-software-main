@@ -101,10 +101,22 @@
             button.html(prevHtml);
         }
 
-            $(document).ready(function () {
-                $('[data-toggle="tooltip"]').tooltip();
-                $('.select2').select2();
-            })
+        window.initImagePreview = function(inputSelector, previewSelector) {
+            $(inputSelector).on('change', function(event) {
+                if (event.target.files && event.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $(previewSelector).attr('src', e.target.result).show();
+                    };
+                    reader.readAsDataURL(event.target.files[0]);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.select2').select2();
+        })
     </script>
     @stack('js')
 </body>

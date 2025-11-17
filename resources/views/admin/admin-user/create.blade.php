@@ -151,20 +151,8 @@
     <script>
         $(document).ready(function() {
             const form = $('#adminUserForm');
-            const profilePicInput = $('#profile_pic');
-            const profilePreview = $('#profile_preview');
 
-            // Preview profile picture
-            profilePicInput.on('change', function(event) {
-                if (event.target.files && event.target.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        profilePreview.attr('src', e.target.result);
-                        profilePreview.show();
-                    };
-                    reader.readAsDataURL(event.target.files[0]);
-                }
-            });
+            initImagePreview('#profile_pic', '#profile_preview');
 
             // Form validation rules
             const rules = {
