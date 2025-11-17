@@ -1,27 +1,16 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminUserController;
-use App\Http\Controllers\Admin\AdSliderController;
-use App\Http\Controllers\Admin\LiveCommentController;
-use App\Http\Controllers\Admin\MusicCategoryController;
-use App\Http\Controllers\Admin\MusicController;
 use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\PointWithdrawRequestController;
 use App\Http\Controllers\Admin\RadioStationController;
 use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\SendMailController;
-use App\Http\Controllers\Admin\ServiceCategoryController;
-use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\ServiceProviderController;
 use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\StatusController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\ViewersController;
 use App\Http\Controllers\User\ValidationController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -79,9 +68,6 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
     Route::get('/setting', [SettingsController::class, 'index'])->name('setting');
     Route::post('/setting/update', [SettingsController::class, 'update'])->name('setting.update');
 
-    Route::get('/viewer', [ViewersController::class, 'index'])->name('viewer');
-    Route::post('/viewer/update', [ViewersController::class, 'update'])->name('viewer.update');
-
     //Profile edit start
     Route::get('/edit-profile', [UserController::class, 'editProfile'])->name('edit.profile');
     Route::post('/update-profile-otp-send', [UserController::class, 'updateProfileOtpSend'])->name('update-profile-otp-send');
@@ -89,31 +75,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
     Route::put('/update-profile', [UserController::class, 'updateProfile'])->name('update.profile');
     Route::put('/update-password', [UserController::class, 'updatePassword'])->name('update.password');
 
-
     Route::resource('general-users', UserController::class)->names('general.user');
     Route::resource('admin-users', AdminUserController::class)->names('admin.user');
 
     Route::resource('radio-stations', RadioStationController::class)->names('radio.stations');
-    Route::resource('music-categorys', MusicCategoryController::class)->names('music.category');
-    Route::resource('music', MusicController::class)->names('music');
-
-    Route::get('live-comments',[ LiveCommentController::class, 'index'])->name('live.comments');
-
-    Route::get('point-withdraw-request',[ PointWithdrawRequestController::class, 'index'])->name('pointWithdrawRequest');
-    Route::post('point-withdraw-request/{id}',[ PointWithdrawRequestController::class, 'changeStatus'])->name('pointWithdrawRequest.changeStatus');
-    Route::get('point-withdraw-request/show/{id}',[ PointWithdrawRequestController::class, 'show'])->name('pointWithdrawRequest.show');
-
-    Route::resource('sliders', SliderController::class)->names('slider');
-
-    Route::resource('ad-sliders', AdSliderController::class)->names('adSlider');
-
-
-    Route::resource('service', ServiceController::class)->names('service');
-    Route::resource('service-category', ServiceCategoryController::class)->names('serviceCategory');
-    Route::resource('service-provider', ServiceProviderController::class)->names('serviceProvider');
-
-    Route::get('/send-mail/list', [SendMailController::class, 'index'])->name('send.mail.list');
-    Route::post('/send-mail/store', [SendMailController::class, 'store'])->name('send.mail.store');
 
 });
 
