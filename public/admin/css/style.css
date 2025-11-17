@@ -1,7 +1,10 @@
 @import url("../../frontend/css/default.css");
 
 body {
-    font-family: "Inter", sans-serif;
+    font-family: 'Poppins', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 .navbar-dark .navbar-nav .nav-link.apply-loan-button {
     background: #334465;
