@@ -838,7 +838,6 @@ label:not(.form-check-label):not(.custom-file-label) {
 .form-control {
     border-radius: 8px;
     border: 1px solid #d1d5db;
-    padding: 0.625rem 0.875rem;
     font-size: 14px;
     transition: all 0.2s ease;
 }
