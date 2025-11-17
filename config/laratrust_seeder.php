@@ -4,7 +4,7 @@ return [
     /**
      * Control if the seeder should create a user per role while seeding the data.
      */
-    'create_users' => false,
+    'create_users' => true,
 
     /**
      * Control if all the laratrust tables should be truncated before running the seeder.
@@ -20,6 +20,7 @@ return [
             'roles' => 'c,r,u,d,m,change_permission',
             'permissions' => 'c,r,u,d,m',
             'radio-stations' => 'm,c,r,u,d,change_status',
+            'tour' => 'm,c,r,u,d,change_status',
             'settings' => 'm',
         ],
         'admin' => [
@@ -30,6 +31,7 @@ return [
             'roles' => 'c,r,u,d,m,change_permission',
             'permissions' => 'c,r,u,d,m',
             'radio-stations' => 'm,c,r,u,d,change_status',
+            'tour' => 'm,c,r,u,d,change_status',
             'settings' => 'm',
         ],
         'user' => [

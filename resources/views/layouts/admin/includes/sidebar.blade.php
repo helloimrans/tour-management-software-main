@@ -49,6 +49,9 @@
                 <x-nav-item routeName="radio.stations.index" permissionKey="radio-stations-menu"
                     iconClass="bx bxs-radio" label="Radio Stations" />
 
+                <x-nav-item routeName="tour.index" permissionKey="tour-menu"
+                    iconClass="fa-map-marked-alt" label="Tours" />
+
                 <x-nav-item routeName="setting" iconClass="fa-cog" permissionKey="settings-menu" label="Settings" />
             </ul>
         </nav>

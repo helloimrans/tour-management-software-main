@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Services\TourService;
+use Illuminate\Http\Request;
+
+class TourController extends Controller
+{
+    protected TourService $tourService;
+
+    public function __construct(TourService $tourService)
+    {
+        $this->tourService = $tourService;
+    }
+
+    public function index()
+    {
+        if (request()->ajax()) {
+            return $this->tourService->datatable();
+        }
+
+        return view('admin.tour.index');
+    }
+
+    public function create()
+    {
+        return view('admin.tour.create');
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $validatedData = $this->tourService->validator($request->all());
+            $this->tourService->store($validatedData);
+
+            return redirect()
+                ->route('tour.index')
+                ->with([
+                    'message' => 'Tour created successfully.',
+                    'alert-type' => 'success',
+                ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->errors())
+                ->withInput();
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to create tour. Please try again.'])
+                ->withInput();
+        }
+    }
+
+    public function edit(string $id)
+    {
+        $data = [
+            'data' => $this->tourService->show($id),
+        ];
+
+        return view('admin.tour.edit', $data);
+    }
+
+    public function update(Request $request, string $id)
+    {
+        try {
+            $validatedData = $this->tourService->validator($request->all(), $id);
+            $this->tourService->update($id, $validatedData);
+
+            return redirect()
+                ->route('tour.index')
+                ->with([
+                    'message' => 'Tour updated successfully.',
+                    'alert-type' => 'success',
+                ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->errors())
+                ->withInput();
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to update tour. Please try again.'])
+                ->withInput();
+        }
+    }
+
+    public function destroy(string $id)
+    {
+        try {
+            $this->tourService->delete($id);
+
+            return redirect()
+                ->route('tour.index')
+                ->with([
+                    'message' => 'Tour deleted successfully.',
+                    'alert-type' => 'success',
+                ]);
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to delete tour. Please try again.']);
+        }
+    }
+}
+
