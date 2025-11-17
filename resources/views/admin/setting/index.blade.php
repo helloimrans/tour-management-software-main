@@ -109,7 +109,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="fa fa-save"></i> Update
+                                            <i class="fa-solid fa-floppy-disk"></i> Update
                                         </button>
                                     </div>
                                 </div>
@@ -181,7 +181,7 @@
                     let button = $(htmlForm).find('button[type="submit"]:focus');
                     button.attr("disabled", true).css("cursor", "default");
                     button.html(
-                        '<span class="submitting"><i class="fas fa-sync-alt"></i> Loading...</span>'
+                        '<span class="submitting"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>'
                     );
                     htmlForm.submit();
                 }

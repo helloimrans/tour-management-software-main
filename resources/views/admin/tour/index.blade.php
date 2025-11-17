@@ -15,7 +15,7 @@
                                 <h4>Tours List</h4>
                                 @permission('tour-create')
                                 <a href="{{ route('tour.create') }}" class="btn btn-primary">
-                                    <i class="fa fa-plus-circle"></i> Add New
+                                    <i class="fa-solid fa-circle-plus"></i> Add New
                                 </a>
                                 @endpermission
                             </div>

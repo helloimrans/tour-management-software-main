@@ -57,7 +57,7 @@ class RoleService
 
                 if ($authUser->hasPermission('roles-change-permission')) {
                     $actions .= '<a href="' . route('roles.permissions', $role->id) . '" class="btn btn-primary btn-xs mx-1">
-                        <i class="fas fa-cogs"></i> Permissions
+                        <i class="fa-solid fa-key"></i> Permissions
                     </a>';
                 }
 
@@ -69,13 +69,13 @@ class RoleService
 
                 if ($authUser->hasPermission('roles-update')) {
                     $actions .= '<a href="' . route('roles.edit', $role->id) . '" class="btn bg-gradient-primary btn-xs mx-1">
-                        <i class="fas fa-edit"></i> Edit
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
                     </a>';
                 }
 
                 if ($authUser->hasPermission('roles-delete')) {
                     $actions .= '<a href="#" data-action="' . route('roles.destroy', $role->id) . '" class="btn bg-gradient-danger btn-xs mx-1 delete">
-                        <i class="fas fa-trash"></i> Delete
+                        <i class="fa-solid fa-trash"></i> Delete
                     </a>';
                 }
 

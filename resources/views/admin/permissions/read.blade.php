@@ -15,10 +15,10 @@
                                 <h4>Permission Details</h4>
                                 <div>
                                     <a href="{{route('permissions.edit', [$permission->id])}}" class="btn bg-gradient-primary mr-1">
-                                        <i class="fas fa-edit"></i> Edit Permission
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit Permission
                                     </a>
                                     <a href="{{route('permissions.index')}}" class="btn btn-primary">
-                                        <i class="fa fa-arrow-circle-left"></i> Back
+                                        <i class="fa-solid fa-arrow-left"></i> Back
                                     </a>
                                 </div>
                             </div>

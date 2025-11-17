@@ -27,7 +27,7 @@
                 <div class="col-12 col-sm-6 col-md-3">
                     <a href="{{ route('general.user.index') }}" class="text-decoration-none text-dark">
                         <div class="info-box">
-                            <span class="info-box-icon bg-info elevation-1"><i class="fa fa-users"></i></span>
+                            <span class="info-box-icon bg-info elevation-1"><i class="fa-solid fa-users"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Total Members</span>
                                 <span class="info-box-number">{{ $data['total_members'] }}</span>
@@ -39,7 +39,7 @@
                 <div class="col-12 col-sm-6 col-md-3">
                     <a href="{{ route('tour.index') }}" class="text-decoration-none text-dark">
                         <div class="info-box mb-3">
-                            <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-map-marked-alt"></i></span>
+                            <span class="info-box-icon bg-danger elevation-1"><i class="fa-solid fa-map-location-dot"></i></span>
                             <div class="info-box-content">
                                 <span class="info-box-text">Total Tours</span>
                                 <span class="info-box-number">{{ $data['tours'] }}</span>

@@ -15,7 +15,7 @@
                                 <h4>Admin Users List</h4>
                                 @permission('admin-user-create')
                                 <a href="{{ route('admin.user.create') }}" class="btn btn-primary">
-                                    <i class="fa fa-plus-circle"></i> Add New
+                                    <i class="fa-solid fa-circle-plus"></i> Add New
                                 </a>
                                 @endpermission
                             </div>

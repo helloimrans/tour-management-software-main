@@ -106,7 +106,7 @@ class TourService
                 if ($authUser->hasPermission('tour-update')) {
                     $editUrl = route('tour.edit', $row->id);
                     $actions .= '<a href="' . $editUrl . '" class="btn bg-gradient-primary btn-xs mx-1">
-                        <i class="fas fa-edit"></i> Edit
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
                     </a>';
                 }
 
@@ -119,7 +119,7 @@ class TourService
                         ' . method_field('DELETE') . '
                         <button type="button" class="btn bg-gradient-danger btn-xs mx-1"
                                 onclick="confirmDelete(\'' . $formId . '\')">
-                            <i class="far fa-trash-alt"></i> Delete
+                            <i class="fa-solid fa-trash"></i> Delete
                         </button>
                     </form>';
                 }

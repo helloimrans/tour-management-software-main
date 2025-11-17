@@ -17,7 +17,7 @@
                             <div class="custom-card-header d-flex justify-content-between">
                                 <h4>{{ $edit?'Edit Role':'Create Role' }}</h4>
                                 <a href="{{route('roles.index')}}" class="btn btn-primary">
-                                    <i class="fa fa-arrow-circle-left"></i> Back
+                                    <i class="fa-solid fa-arrow-left"></i> Back
                                 </a>
                             </div>
 
@@ -59,7 +59,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="fa fa-save"></i> {{ $edit?'Update Role':'Create Role' }}
+                                            <i class="fa-solid fa-floppy-disk"></i> {{ $edit?'Update Role':'Create Role' }}
                                         </button>
                                     </div>
                                 </div>

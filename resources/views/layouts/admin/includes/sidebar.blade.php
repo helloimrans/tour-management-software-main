@@ -15,20 +15,20 @@
         <!-- Sidebar Menu -->
         <nav class="mt-4">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-                <x-nav-item routeName="admin.dashboard" permissionKey="dashboard-menu" iconClass="bx bxs-dashboard"
+                <x-nav-item routeName="admin.dashboard" permissionKey="dashboard-menu" iconClass="fa-gauge-high"
                     label="Dashboard" />
 
                 <x-nav-item routeName="" iconClass="fa-users" permissionKey="user-management-menu"
                     label="User Management" :submenu="[
                         [
                             'route' => 'admin.user.index',
-                            'icon' => 'fa-user-circle',
+                            'icon' => 'fa-user-shield',
                             'permissionKey' => 'admin-user-menu',
                             'label' => 'Admin Users',
                         ],
                         [
                             'route' => 'general.user.index',
-                            'icon' => 'fa-user-tag',
+                            'icon' => 'fa-users-gear',
                             'permissionKey' => 'general-user-menu',
                             'label' => 'General Users',
                         ],
@@ -40,16 +40,16 @@
                         ],
                         [
                             'route' => 'roles.index',
-                            'icon' => 'fa-tasks',
+                            'icon' => 'fa-user-tag',
                             'permissionKey' => 'roles-menu',
                             'label' => 'Roles',
                         ],
                     ]" />
 
                 <x-nav-item routeName="tour.index" permissionKey="tour-menu"
-                    iconClass="fa-map-marked-alt" label="Tours" />
+                    iconClass="fa-map-location-dot" label="Tours" />
 
-                <x-nav-item routeName="setting" iconClass="fa-cog" permissionKey="settings-menu" label="Settings" />
+                <x-nav-item routeName="setting" iconClass="fa-gear" permissionKey="settings-menu" label="Settings" />
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

@@ -14,7 +14,7 @@
                                 <h4>Permissions List</h4>
                                 @permission('permissions-create')
                                 <a href="{{ route('permissions.create') }}" class="btn btn-primary">
-                                    <i class="fa fa-plus-circle"></i> Add New
+                                    <i class="fa-solid fa-circle-plus"></i> Add New
                                 </a>
                                 @endpermission
                             </div>

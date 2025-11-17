@@ -14,7 +14,7 @@
                         <div class="custom-card-header d-flex justify-content-between">
                             <h4>Role Permissions</h4>
                             <a href="{{route('roles.index')}}" class="btn btn-primary">
-                                <i class="fas fa-backward"></i> Back
+                                <i class="fa-solid fa-arrow-left"></i> Back
                             </a>
                         </div>
                         @if(count($permissionsGroupByTable))
@@ -30,7 +30,7 @@
                                             </div>
                                             <div class="card-tools">
                                                 <button type="submit" class="btn btn-primary btn-sm">
-                                                    <i class="fas fa-sync"></i>
+                                                    <i class="fa-solid fa-arrows-rotate"></i>
                                                     Sync Permission
                                                 </button>
                                             </div>

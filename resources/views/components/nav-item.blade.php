@@ -41,11 +41,11 @@
     <li class="nav-item {{ $isActive ? 'menu-is-opening menu-open' : '' }}">
         <a href="{{ $routeName ? route($routeName, $routeParams ?? []) : '#' }}"
            class="nav-link {{ $isActive ? 'active' : '' }}">
-            <i class="nav-icon fas {{ $iconClass }}"></i>
+            <i class="nav-icon fa-solid {{ $iconClass }}"></i>
             <p>
                 {{ $label }}
                 @if(count($submenu) > 0)
-                    <i class="right fas fa-angle-left"></i>
+                    <i class="right fa-solid fa-chevron-left"></i>
                 @endif
             </p>
         </a>

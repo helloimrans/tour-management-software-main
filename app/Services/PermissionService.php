@@ -47,13 +47,13 @@ class PermissionService
 
                 if ($authUser->hasPermission('permissions-update')) {
                     $actions .= '<a href="' . route('permissions.edit', $permission->id) . '" class="btn bg-gradient-primary btn-xs mx-1">
-                        <i class="fas fa-edit"></i> Edit
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
                     </a>';
                 }
 
                 if ($authUser->hasPermission('permissions-delete')) {
                     $actions .= '<a href="#" data-action="' . route('permissions.destroy', $permission->id) . '" class="btn bg-gradient-danger btn-xs mx-1 delete">
-                        <i class="fas fa-trash"></i> Delete
+                        <i class="fa-solid fa-trash"></i> Delete
                     </a>';
                 }
 

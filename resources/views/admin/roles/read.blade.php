@@ -15,10 +15,10 @@
                                 <h4>Role Details</h4>
                                 <div>
                                     <a href="{{route('roles.edit', [$role->id])}}" class="btn bg-gradient-primary mr-1">
-                                        <i class="fas fa-edit"></i> Edit Role
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit Role
                                     </a>
                                     <a href="{{route('roles.index')}}" class="btn btn-primary">
-                                        <i class="fa fa-arrow-circle-left"></i> Back
+                                        <i class="fa-solid fa-arrow-left"></i> Back
                                     </a>
                                 </div>
                             </div>

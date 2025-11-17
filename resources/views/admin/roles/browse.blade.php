@@ -13,7 +13,7 @@
                                 <h4>Roles List</h4>
                                 @permission('roles-create')
                                 <a href="{{ route('roles.create') }}" class="btn btn-primary">
-                                    <i class="fa fa-plus-circle"></i> Add New
+                                    <i class="fa-solid fa-circle-plus"></i> Add New
                                 </a>
                                 @endpermission
                             </div>

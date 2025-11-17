@@ -42,12 +42,11 @@
     <link rel="stylesheet" href="{{ asset('admin/css/adminlte.css') }}">
 
     <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.0/css/OverlayScrollbars.min.css">
-    <!-- Boxicons CSS -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
     <!-- Toastr CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
@@ -93,7 +92,7 @@
 
         window.loadingButton = (button) => {
             button.attr("disabled", true).css("cursor", "default");
-            button.html('<span class="submitting"><i class="fas fa-sync-alt"></i> Loading...</span>');
+            button.html('<span class="submitting"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>');
         }
 
         window.revertLoadingButton = (button, prevHtml) => {

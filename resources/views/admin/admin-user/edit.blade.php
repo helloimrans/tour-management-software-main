@@ -14,7 +14,7 @@
                             <div class="custom-card-header d-flex justify-content-between">
                                 <h4>Edit Admin User</h4>
                                 <a href="{{ route('admin.user.index') }}" class="btn btn-primary">
-                                    <i class="fa fa-arrow-circle-left"></i> Back
+                                    <i class="fa-solid fa-arrow-left"></i> Back
                                 </a>
                             </div>
 
@@ -141,7 +141,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="fa fa-save"></i> Update
+                                            <i class="fa-solid fa-floppy-disk"></i> Update
                                         </button>
                                     </div>
                                 </div>
@@ -201,7 +201,7 @@
                 submitHandler: function(form) {
                     const submitButton = $(form).find('button[type="submit"]');
                     submitButton.prop('disabled', true)
-                        .html('<i class="fas fa-sync-alt fa-spin"></i> Updating...');
+                        .html('<i class="fa-solid fa-spinner fa-spin"></i> Updating...');
                     form.submit();
                 }
             });

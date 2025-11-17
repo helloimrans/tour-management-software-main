@@ -1,7 +1,7 @@
 <nav class="main-header navbar navbar-expand navbar-white navbar-dark custom-bg-blue">
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
+            <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa-solid fa-bars"></i></a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#">{{auth()->user()->tour->name ?? 'All Tours'}}</a>
@@ -12,13 +12,13 @@
         @guest
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.login-form') }}">
-                    <i class="far fa-user"></i>
+                    <i class="fa-regular fa-user"></i>
                 </a>
             </li>
         @else
             <li class="nav-item dropdown" id="notificationContainer">
                 <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
-                    <i class="far fa-bell" style="font-size: 22px"></i>
+                    <i class="fa-regular fa-bell" style="font-size: 22px"></i>
                     <span class="badge bg-danger navbar-badge"
                         id="notiicationCount">{{ count(Auth::user()->unreadNotifications) }}</span>
                 </a>
@@ -26,7 +26,7 @@
                     <span class="dropdown-item dropdown-header">
                         Notifications
                         @if (count(Auth::user()->unreadNotifications) > 0)
-                            <a href="" class="mark-all-as-read"><i class="fa fa-circle mr-1"></i> Mark all
+                            <a href="" class="mark-all-as-read"><i class="fa-solid fa-circle mr-1"></i> Mark all
                                 as read</a>
                         @endif
                     </span>
@@ -41,7 +41,7 @@
                             <div class="media-body">
                                 <a href="javascript:;" data-notification-id="{{ $notification->id }}" class="mark-and-view">
                                     <p>{{ $notification->data['heading'] }} @if (!$notification->read_at)
-                                            <i class="fa fa-circle custom-color-danger ml-1 fs-10"></i>
+                                            <i class="fa-solid fa-circle custom-color-danger ml-1 fs-10"></i>
                                         @endif
                                     </p>
                                     <h6>{{ $notification->data['text'] }}</h6>
@@ -57,7 +57,7 @@
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link text-sm" data-toggle="dropdown" href="#">
-                    <i class="fas fa-user-circle" style="font-size: 22px"></i>
+                    <i class="fa-solid fa-circle-user" style="font-size: 22px"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right profile-dd">
                     <span class="dropdown-header">
@@ -76,7 +76,7 @@
                                 <div>
                                     <h6>{{ auth()->user()->name }}</h6>
                                     <p>Admin</p>
-                                    <h6 class="mt-3"><i class="fa fa-phone-alt mr-3"></i> {{ auth()->user()->phone }}</h6>
+                                    <h6 class="mt-3"><i class="fa-solid fa-phone mr-3"></i> {{ auth()->user()->phone }}</h6>
                                 </div>
                                 <div>
                                     {{-- <a href="javascript:;" class="custom-bg-secondary text-light">Edit</a> --}}
