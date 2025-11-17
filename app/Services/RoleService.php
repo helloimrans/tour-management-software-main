@@ -56,30 +56,30 @@ class RoleService
                 $actions = '';
 
                 if ($authUser->hasPermission('roles-change-permission')) {
-                    $actions .= '<a href="' . route('roles.permissions', $role->id) . '" class="btn-action ba-primary">
+                    $actions .= '<a href="' . route('roles.permissions', $role->id) . '" class="btn btn-primary btn-xs mx-1">
                         <i class="fas fa-cogs"></i> Permissions
                     </a>';
                 }
 
                 if ($authUser->hasPermission('roles-read')) {
-                    $actions .= '<a href="' . route('roles.show', $role->id) . '" class="btn-action ba-info">
+                    $actions .= '<a href="' . route('roles.show', $role->id) . '" class="btn btn-info btn-xs mx-1">
                         <i class="fas fa-eye"></i> View
                     </a>';
                 }
 
                 if ($authUser->hasPermission('roles-update')) {
-                    $actions .= '<a href="' . route('roles.edit', $role->id) . '" class="btn-action ba-warning">
+                    $actions .= '<a href="' . route('roles.edit', $role->id) . '" class="btn bg-gradient-primary btn-xs mx-1">
                         <i class="fas fa-edit"></i> Edit
                     </a>';
                 }
 
                 if ($authUser->hasPermission('roles-delete')) {
-                    $actions .= '<a href="#" data-action="' . route('roles.destroy', $role->id) . '" class="btn-action ba-danger delete">
+                    $actions .= '<a href="#" data-action="' . route('roles.destroy', $role->id) . '" class="btn bg-gradient-danger btn-xs mx-1 delete">
                         <i class="fas fa-trash"></i> Delete
                     </a>';
                 }
 
-                return $actions;
+                return $actions ?: '-';
             })
             ->rawColumns(['action'])
             ->toJson();

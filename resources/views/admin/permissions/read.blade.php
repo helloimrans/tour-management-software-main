@@ -5,23 +5,23 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <div class="card dashboard-custom-card">
-                    <div class="card-body">
-                        <div class="card-header custom-card-header p-0  border-0">
-                            <h4 class="">Permission</h4>
-
-                            <div class="card-tools">
-                                    <a href="{{route('permissions.edit', [$permission->id])}}" class="btn btn-primary mr-1">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="card dashboard-custom-card">
+                        <div class="card-body">
+                            <div class="custom-card-header d-flex justify-content-between">
+                                <h4>Permission Details</h4>
+                                <div>
+                                    <a href="{{route('permissions.edit', [$permission->id])}}" class="btn bg-gradient-primary mr-1">
                                         <i class="fas fa-edit"></i> Edit Permission
                                     </a>
-                                    <a href="{{route('permissions.index')}}" class="btn btn-info">
-                                        <i class="fas fa-backward"></i> Back
+                                    <a href="{{route('permissions.index')}}" class="btn btn-primary">
+                                        <i class="fa fa-arrow-circle-left"></i> Back
                                     </a>
+                                </div>
                             </div>
-                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="custom-view-box mb-4">

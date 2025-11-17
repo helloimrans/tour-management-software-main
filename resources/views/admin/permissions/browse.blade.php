@@ -4,25 +4,25 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <div class="card dashboard-custom-card">
-                    <div class="card-body">
-                        <div class="custom-card-header d-flex justify-content-between">
-                            <h4>Permissions List</h4>
-                            @permission('permissions-create')
-                            <a href="{{ route('permissions.create') }}" class="btn btn-primary"><i
-                                    class="fa fa-plus-circle"></i>
-                                Add New</a>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="card dashboard-custom-card">
+                        <div class="card-body">
+                            <div class="custom-card-header d-flex justify-content-between">
+                                <h4>Permissions List</h4>
+                                @permission('permissions-create')
+                                <a href="{{ route('permissions.create') }}" class="btn btn-primary">
+                                    <i class="fa fa-plus-circle"></i> Add New
+                                </a>
                                 @endpermission
-                        </div>
+                            </div>
                         <div class="table-responsive">
                             <table class="table datatable custom-table dt-responsive nowrap">
 
                             </table>
                         </div>
-
                     </div>
                 </div>
             </div>

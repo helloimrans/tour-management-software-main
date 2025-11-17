@@ -14,7 +14,7 @@
                             <div class="custom-card-header d-flex justify-content-between">
                                 <h4>Settings </h4>
                             </div>
-                            <form id="musicForm" action="{{ route('setting.update') }}"
+                            <form id="settingsForm" action="{{ route('setting.update') }}"
                                 method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
@@ -85,7 +85,7 @@
                                             <div class="mt-2">
                                                 <img id="app-logo-preview"
                                                     src="{{ @$setting->app_logo ? Storage::url(@$setting->app_logo) : asset('defaults/noimage/no_img.jpg') }}"
-                                                    alt="Image" style="width: 100px;" />
+                                                    alt="Image" style="max-width: 200px; max-height: 200px; border-radius: 8px;" />
                                             </div>
                                         </div>
                                     </div>
@@ -100,7 +100,7 @@
                                             <div class="mt-2">
                                                 <img id="app-background-image-preview"
                                                     src="{{ @$setting->app_background_image ? Storage::url(@$setting->app_background_image) : asset('defaults/noimage/no_img.jpg') }}"
-                                                    alt="Image" style="width: 100px;" />
+                                                    alt="Image" style="max-width: 200px; max-height: 200px; border-radius: 8px;" />
                                             </div>
                                         </div>
                                     </div>
@@ -108,7 +108,9 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <button class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-save"></i> Update
+                                        </button>
                                     </div>
                                 </div>
 
@@ -126,7 +128,7 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            let htmlForm = $('#musicForm');
+            let htmlForm = $('#settingsForm');
             let validationTimer;
 
             $.validator.addMethod("filesize", function(value, element, param) {

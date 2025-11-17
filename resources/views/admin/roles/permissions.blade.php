@@ -28,7 +28,7 @@
                                                 <a href="#" class="permission-deselect-all">{{ __('Unselect all') }}</a>
                                             </div>
                                             <div class="card-tools">
-                                                <button type="submit" class="btn btn-info btn-sm">
+                                                <button type="submit" class="btn btn-primary btn-sm">
                                                     <i class="fas fa-sync"></i>
                                                     Sync Permission
                                                 </button>
@@ -115,7 +115,7 @@
                                         </div>
                                         <div class="col-md-12 text-right">
                                             <hr/>
-                                            <button type="submit" class="btn btn-info btn-sm">
+                                            <button type="submit" class="btn btn-primary">
                                                 <i class="fas fa-sync"></i>
                                                 Sync Permission
                                             </button>

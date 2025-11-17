@@ -40,24 +40,24 @@ class PermissionService
                 $actions = '';
 
                 if ($authUser->hasPermission('permissions-read')) {
-                    $actions .= '<a href="' . route('permissions.show', $permission->id) . '" class="btn-action ba-primary">
+                    $actions .= '<a href="' . route('permissions.show', $permission->id) . '" class="btn btn-info btn-xs mx-1">
                         <i class="fas fa-eye"></i> View
                     </a>';
                 }
 
                 if ($authUser->hasPermission('permissions-update')) {
-                    $actions .= '<a href="' . route('permissions.edit', $permission->id) . '" class="btn-action ba-warning">
+                    $actions .= '<a href="' . route('permissions.edit', $permission->id) . '" class="btn bg-gradient-primary btn-xs mx-1">
                         <i class="fas fa-edit"></i> Edit
                     </a>';
                 }
 
                 if ($authUser->hasPermission('permissions-delete')) {
-                    $actions .= '<a href="#" data-action="' . route('permissions.destroy', $permission->id) . '" class="btn-action ba-danger delete">
+                    $actions .= '<a href="#" data-action="' . route('permissions.destroy', $permission->id) . '" class="btn bg-gradient-danger btn-xs mx-1 delete">
                         <i class="fas fa-trash"></i> Delete
                     </a>';
                 }
 
-                return $actions;
+                return $actions ?: '-';
             })
             ->rawColumns(['action'])
             ->toJson();

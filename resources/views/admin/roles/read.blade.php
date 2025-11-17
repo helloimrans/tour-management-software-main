@@ -5,22 +5,23 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <div class="card dashboard-custom-card">
-                    <div class="card-body">
-                        <div class="card-header custom-card-header p-0  border-0">
-                            <h4 class="card-title">Role</h4>
-
-                            <div class="card-tools">
-                                <a href="{{route('roles.edit', [$role->id])}}" class="create-button bg-custom2 mr-1">
-                                    <i class="fas fa-edit"></i> Edit Role </a>
-                                <a href="{{route('roles.index')}}" class="create-button">
-                                    <i class="fas fa-backward"></i> Back
-                                </a>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="card dashboard-custom-card">
+                        <div class="card-body">
+                            <div class="custom-card-header d-flex justify-content-between">
+                                <h4>Role Details</h4>
+                                <div>
+                                    <a href="{{route('roles.edit', [$role->id])}}" class="btn bg-gradient-primary mr-1">
+                                        <i class="fas fa-edit"></i> Edit Role
+                                    </a>
+                                    <a href="{{route('roles.index')}}" class="btn btn-primary">
+                                        <i class="fa fa-arrow-circle-left"></i> Back
+                                    </a>
+                                </div>
                             </div>
-                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="custom-view-box mb-4">

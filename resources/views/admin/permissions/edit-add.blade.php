@@ -14,10 +14,9 @@
                 <div class="card dashboard-custom-card">
                     <div class="card-body">
                         <div class="custom-card-header d-flex justify-content-between">
-                            <h4 class="">{{ $edit ? 'Edit Permission' : 'Create Permission' }}</h4>
-
-                            <a href="{{ route('permissions.index') }}" class="create-button">
-                                <i class="fas fa-backward"></i> Back
+                            <h4>{{ $edit ? 'Edit Permission' : 'Create Permission' }}</h4>
+                            <a href="{{ route('permissions.index') }}" class="btn btn-primary">
+                                <i class="fa fa-arrow-circle-left"></i> Back
                             </a>
                         </div>
                         <form
@@ -27,28 +26,41 @@
                             @if ($edit)
                                 @method('put')
                             @endif
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="key">Name <span style="color: red"> * </span></label>
-                                    <input type="text" class="form-control" name="name" id="name"
-                                        value="{{ $edit ? $permission->name : old('name') }}"
-                                        placeholder="Enter unique permission name" required>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="name" id="name"
+                                            value="{{ $edit ? $permission->name : old('name') }}"
+                                            placeholder="Enter unique permission name" required>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="display_name">Display Name <span style="color: red"> * </span></label>
-                                    <input type="text" class="form-control" name="display_name" id="display_name"
-                                        value="{{ $edit ? $permission->display_name : old('display_name') }}"
-                                        placeholder="Display Name" required>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="display_name" class="form-label">Display Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="display_name" id="display_name"
+                                            value="{{ $edit ? $permission->display_name : old('display_name') }}"
+                                            placeholder="Display Name" required>
+                                    </div>
                                 </div>
 
-                                <div class="form-group col-md-6">
-                                    <label for="group_name">Group name <span style="color: red"> * </span></label>
-                                    <input type="text" class="form-control" name="group_name" id="group_name"
-                                        value="{{ $edit ? $permission->group_name : old('group_name') }}"
-                                        placeholder="Group name" required>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="group_name" class="form-label">Group Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" name="group_name" id="group_name"
+                                            value="{{ $edit ? $permission->group_name : old('group_name') }}"
+                                            placeholder="Group name" required>
+                                    </div>
                                 </div>
                             </div>
-                                <button class="btn btn-primary"><i class="fa fa-save"></i> {{ $edit ? 'Update Permission' : 'Create Permission' }}</button>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-save"></i> {{ $edit ? 'Update Permission' : 'Create Permission' }}
+                                    </button>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
