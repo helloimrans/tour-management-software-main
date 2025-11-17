@@ -6,12 +6,15 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\StatusController;
 use App\Http\Controllers\Admin\TourController;
+use App\Http\Controllers\Admin\TravelAgencyController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\User\ValidationController;
+use App\Http\Controllers\TravelAgencyController as PublicTravelAgencyController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -30,10 +33,16 @@ Route::post('check-old-password', [ValidationController::class, 'checkOldPasswor
 
 
 Route::group(['middleware' => ['web']], function () {
-    Route::get('/', [LoginController::class, 'showLoginForm'])->name('show.login.form');
+    Route::get('/', [LandingController::class, 'index'])->name('landing');
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('admin.login');
     Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
+
+    Route::get('/travel-agency/register', [PublicTravelAgencyController::class, 'showRegistrationForm'])->name('travel.agency.show.register');
+    Route::post('/travel-agency/register', [PublicTravelAgencyController::class, 'register'])->name('travel.agency.register');
+
+    Route::get('/member/register', [\App\Http\Controllers\MemberController::class, 'showRegistrationForm'])->name('member.show.register');
+    Route::post('/member/register', [\App\Http\Controllers\MemberController::class, 'register'])->name('member.register');
 });
 
 Route::group(['prefix' => 'dashboard', 'as' => 'admin.', 'middleware' => ['auth']], function () {
@@ -79,7 +88,30 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
     Route::resource('admin-users', AdminUserController::class)->names('admin.user');
 
     Route::resource('tours', TourController::class)->names('tour');
+    Route::resource('travel-agencies', TravelAgencyController::class)->names('travel.agency');
 
+});
+
+Route::group(['prefix' => 'travel-agency', 'as' => 'travel.agency.', 'middleware' => ['auth']], function () {
+    Route::get('/dashboard', [PublicTravelAgencyController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('/members', [\App\Http\Controllers\Admin\MemberManagementController::class, 'index'])->name('members');
+    Route::resource('expenses', \App\Http\Controllers\Admin\ExpenseController::class)->names('expense');
+    Route::resource('payments', \App\Http\Controllers\Admin\PaymentController::class)->names('payment');
+});
+
+Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
+    Route::get('/member-management', [\App\Http\Controllers\Admin\MemberManagementController::class, 'index'])->name('member-management.index');
+});
+
+Route::group(['prefix' => 'member', 'as' => 'member.', 'middleware' => ['auth']], function () {
+    Route::get('/dashboard', [\App\Http\Controllers\MemberController::class, 'dashboard'])->name('dashboard');
+    Route::get('/profile', [\App\Http\Controllers\MemberController::class, 'showProfile'])->name('profile');
+    Route::put('/profile', [\App\Http\Controllers\MemberController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/tours', [\App\Http\Controllers\MemberController::class, 'tours'])->name('tours');
+    Route::post('/join-tour/{tourId}', [\App\Http\Controllers\MemberController::class, 'joinTour'])->name('join-tour');
+    Route::get('/current-tour', [\App\Http\Controllers\MemberController::class, 'currentTour'])->name('current-tour');
+    Route::get('/tour-history', [\App\Http\Controllers\MemberController::class, 'tourHistory'])->name('tour-history');
 });
 
 

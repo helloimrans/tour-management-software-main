@@ -3,15 +3,23 @@
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa-solid fa-bars"></i></a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">{{auth()->user()->tour->name ?? 'All Tours'}}</a>
+        @auth
+        <li class="nav-item d-none d-sm-block">
+            <a class="nav-link" href="#">
+                @if(auth()->user()->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE)
+                    {{auth()->user()->tour ? auth()->user()->tour->name : 'All Tours'}}
+                @else
+                    All Tours
+                @endif
+            </a>
         </li>
+        @endauth
     </ul>
 
     <ul class="navbar-nav ml-auto">
         @guest
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.login-form') }}">
+                <a class="nav-link" href="{{ route('login') }}">
                     <i class="fa-regular fa-user"></i>
                 </a>
             </li>

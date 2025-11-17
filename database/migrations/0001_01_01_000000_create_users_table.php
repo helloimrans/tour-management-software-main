@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('phone')->unique()->nullable();
             $table->string('profile_pic')->nullable();
             $table->string('address')->nullable();
+            $table->string('company_name')->nullable();
             $table->string('password');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

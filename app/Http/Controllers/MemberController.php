@@ -1,0 +1,148 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Tour;
+use App\Models\User;
+use App\Services\MemberService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+class MemberController extends Controller
+{
+    protected MemberService $memberService;
+
+    public function __construct(MemberService $memberService)
+    {
+        $this->memberService = $memberService;
+    }
+
+    public function showRegistrationForm()
+    {
+        return view('member.register');
+    }
+
+    public function register(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'first_name' => ['required', 'string', 'max:191'],
+                'last_name' => ['nullable', 'string', 'max:191'],
+                'phone' => [
+                    'required',
+                    'regex:/^(01[3-9]\d{8})$/',
+                    'unique:users,phone',
+                ],
+                'email' => [
+                    'nullable',
+                    'email',
+                    'max:191',
+                    'unique:users,email',
+                ],
+                'profile_pic' => [
+                    'nullable',
+                    'mimes:jpg,jpeg,png,webp,svg,gif',
+                    'max:5120',
+                ],
+                'password' => ['required', 'string', 'min:5', 'confirmed'],
+                'address' => ['nullable', 'string', 'max:500'],
+            ]);
+
+            $user = $this->memberService->register($validatedData);
+            Auth::login($user);
+
+            return redirect()->route('member.dashboard')->with([
+                'message' => 'Registration successful!',
+                'alert-type' => 'success',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to register. Please try again.'])->withInput();
+        }
+    }
+
+    public function dashboard()
+    {
+        $data = $this->memberService->getDashboardData(Auth::id());
+        return view('member.dashboard', $data);
+    }
+
+    public function showProfile()
+    {
+        $data['user'] = Auth::user();
+        return view('member.profile', $data);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'first_name' => ['required', 'string', 'max:191'],
+                'last_name' => ['nullable', 'string', 'max:191'],
+                'phone' => [
+                    'required',
+                    'regex:/^(01[3-9]\d{8})$/',
+                    'unique:users,phone,' . Auth::id(),
+                ],
+                'email' => [
+                    'nullable',
+                    'email',
+                    'max:191',
+                    'unique:users,email,' . Auth::id(),
+                ],
+                'profile_pic' => [
+                    'nullable',
+                    'mimes:jpg,jpeg,png,webp,svg,gif',
+                    'max:5120',
+                ],
+                'address' => ['nullable', 'string', 'max:500'],
+            ]);
+
+            $this->memberService->updateProfile(Auth::id(), $validatedData);
+
+            return redirect()->route('member.profile')->with([
+                'message' => 'Profile updated successfully.',
+                'alert-type' => 'success',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to update profile. Please try again.'])->withInput();
+        }
+    }
+
+    public function tours()
+    {
+        $data['tours'] = $this->memberService->getAvailableTours();
+        return view('member.tours', $data);
+    }
+
+    public function joinTour(Request $request, $tourId)
+    {
+        try {
+            $this->memberService->joinTour(Auth::id(), $tourId);
+
+            return redirect()->route('member.current-tour')->with([
+                'message' => 'Successfully joined the tour!',
+                'alert-type' => 'success',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function currentTour()
+    {
+        $data = $this->memberService->getCurrentTour(Auth::id());
+        return view('member.current-tour', $data);
+    }
+
+    public function tourHistory()
+    {
+        $data['tours'] = $this->memberService->getTourHistory(Auth::id());
+        return view('member.tour-history', $data);
+    }
+}
+

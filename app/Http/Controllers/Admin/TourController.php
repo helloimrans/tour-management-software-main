@@ -26,11 +26,17 @@ class TourController extends Controller
 
     public function create()
     {
+        if (!auth()->user()->hasPermission('tour-create')) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('admin.tour.create');
     }
 
     public function store(Request $request)
     {
+        if (!auth()->user()->hasPermission('tour-create')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $validatedData = $request->validate([
                 'name' => ['required', 'string', 'max:191'],
@@ -61,6 +67,9 @@ class TourController extends Controller
 
     public function edit(string $id)
     {
+        if (!auth()->user()->hasPermission('tour-update')) {
+            abort(403, 'Unauthorized action.');
+        }
         $data = [
             'data' => $this->tourService->show($id),
         ];
@@ -70,6 +79,9 @@ class TourController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if (!auth()->user()->hasPermission('tour-update')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $validatedData = $request->validate([
                 'name' => ['required', 'string', 'max:191'],
@@ -100,6 +112,9 @@ class TourController extends Controller
 
     public function destroy(string $id)
     {
+        if (!auth()->user()->hasPermission('tour-delete')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $this->tourService->delete($id);
 

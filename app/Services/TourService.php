@@ -12,9 +12,14 @@ class TourService
 {
     public function getAll()
     {
-        return Tour::with(['createdBy', 'updatedBy'])
-            ->latest()
-            ->get();
+        $query = Tour::with(['createdBy', 'updatedBy']);
+
+        $authUser = AuthHelper::getAuthUser();
+        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
+            $query->where('created_by', $authUser->id);
+        }
+
+        return $query->latest()->get();
     }
 
     public function store(array $input): Tour
@@ -30,12 +35,26 @@ class TourService
 
     public function show(int $id): Tour
     {
-        return Tour::findOrFail($id);
+        $query = Tour::query();
+
+        $authUser = AuthHelper::getAuthUser();
+        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
+            $query->where('created_by', $authUser->id);
+        }
+
+        return $query->findOrFail($id);
     }
 
     public function update(int $id, array $input): Tour
     {
-        $tour = Tour::findOrFail($id);
+        $query = Tour::query();
+
+        $authUser = AuthHelper::getAuthUser();
+        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
+            $query->where('created_by', $authUser->id);
+        }
+
+        $tour = $query->findOrFail($id);
 
         if (isset($input['image'])) {
             if ($tour->image) {
@@ -53,7 +72,14 @@ class TourService
 
     public function delete(int $id): bool
     {
-        $tour = Tour::findOrFail($id);
+        $query = Tour::query();
+
+        $authUser = AuthHelper::getAuthUser();
+        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
+            $query->where('created_by', $authUser->id);
+        }
+
+        $tour = $query->findOrFail($id);
 
         if ($tour->image) {
             deleteFile($tour->image);
@@ -70,8 +96,13 @@ class TourService
     {
         $authUser = AuthHelper::getAuthUser();
 
-        $data = Tour::with(['createdBy', 'updatedBy'])
-            ->latest();
+        $data = Tour::with(['createdBy', 'updatedBy']);
+
+        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
+            $data->where('created_by', $authUser->id);
+        }
+
+        $data->latest();
 
         return DataTables::of($data)
             ->addColumn('created_by_name', function ($row) {

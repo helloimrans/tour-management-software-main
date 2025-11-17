@@ -1,0 +1,123 @@
+@extends('layouts.admin.master')
+@section('title', 'Add Expense')
+
+@push('css')
+@endpush
+
+@section('content')
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Add Expense</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ route('travel.agency.dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('expense.index') }}">Expenses</a></li>
+                        <li class="breadcrumb-item active">Add</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="card dashboard-custom-card">
+                        <div class="card-body">
+                            <div class="custom-card-header d-flex justify-content-between">
+                                <h4>Add Expense</h4>
+                                <a href="{{ route('expense.index') }}" class="btn btn-primary">
+                                    <i class="fa-solid fa-arrow-left"></i> Back
+                                </a>
+                            </div>
+
+                            <form id="expenseForm" action="{{ route('expense.store') }}" method="post">
+                                @csrf
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="tour_id" class="form-label">Tour <span class="text-danger">*</span></label>
+                                            <select name="tour_id" class="form-control" id="tour_id" required>
+                                                <option value="">Select Tour</option>
+                                                @foreach($tours as $tour)
+                                                    <option value="{{ $tour->id }}" {{ old('tour_id') == $tour->id ? 'selected' : '' }}>
+                                                        {{ $tour->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('tour_id')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
+                                            <select name="category" class="form-control" id="category" required>
+                                                <option value="room" {{ old('category') == 'room' ? 'selected' : '' }}>Room</option>
+                                                <option value="transport" {{ old('category') == 'transport' ? 'selected' : '' }}>Transport</option>
+                                                <option value="food" {{ old('category') == 'food' ? 'selected' : '' }}>Food</option>
+                                                <option value="other" {{ old('category') == 'other' ? 'selected' : '' }}>Other</option>
+                                            </select>
+                                            @error('category')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="amount" class="form-label">Amount <span class="text-danger">*</span></label>
+                                            <input type="number" name="amount" class="form-control" id="amount" step="0.01"
+                                                   placeholder="Enter Amount" value="{{ old('amount') }}" required>
+                                            @error('amount')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="expense_date" class="form-label">Date <span class="text-danger">*</span></label>
+                                            <input type="date" name="expense_date" class="form-control" id="expense_date"
+                                                   value="{{ old('expense_date', date('Y-m-d')) }}" required>
+                                            @error('expense_date')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="description" class="form-label">Description</label>
+                                            <textarea name="description" class="form-control" id="description" rows="3"
+                                                      placeholder="Enter Description">{{ old('description') }}</textarea>
+                                            @error('description')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa-solid fa-floppy-disk"></i> Submit
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+

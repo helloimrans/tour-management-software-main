@@ -39,7 +39,12 @@
                                     </button>
                                     <p class="mt-3 text-gray fs-14">{{__('messages.dont_have_account')}} <a
                                             class="custom-color-secondary fw-500"
-                                            href="#">{{__('messages.signup')}}</a></p>
+                                            href="{{ route('landing') }}">Go to Registration</a></p>
+                                    <p class="mt-2">
+                                        <a href="{{ route('landing') }}" class="fs-14 text-dark">
+                                            <i class="fa-solid fa-arrow-left"></i> Back to Home
+                                        </a>
+                                    </p>
 
                                             <div class="copyright-login">
                                                 <p>Copyright {{ date('Y') }} All rights Reserved</p>

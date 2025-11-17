@@ -16,6 +16,7 @@ class User extends Authenticatable implements LaratrustUserContract
 
     const ADMIN_USER_CODE = '1';
     const NORMAL_USER_CODE = '2';
+    const TRAVEL_AGENCY_USER_CODE = '3';
 
     /**
      * The attributes that are mass assignable.
@@ -34,6 +35,7 @@ class User extends Authenticatable implements LaratrustUserContract
         'profile_pic',
         'tour_id',
         'address',
+        'company_name',
     ];
 
     protected $appends = ['profile_pic_url'];
@@ -85,6 +87,10 @@ class User extends Authenticatable implements LaratrustUserContract
 
     public function scopeGeneralUser($query){
         return $query->where(['user_type' => self::NORMAL_USER_CODE]);
+    }
+
+    public function scopeTravelAgency($query){
+        return $query->where(['user_type' => self::TRAVEL_AGENCY_USER_CODE]);
     }
 
     public function tour()

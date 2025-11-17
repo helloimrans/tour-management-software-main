@@ -61,18 +61,20 @@ class LoginController extends Controller
     public function login(Request $request)
     {
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)
+            ->orWhere('phone', $request->email)
+            ->first();
 
-        // Check if the user type is not ADMIN_USER_CODE
-        if (@$user->user_type != User::ADMIN_USER_CODE) {
+        // Check if the user type is ADMIN_USER_CODE, TRAVEL_AGENCY_USER_CODE, or NORMAL_USER_CODE
+        if (@$user && !in_array($user->user_type, [User::ADMIN_USER_CODE, User::TRAVEL_AGENCY_USER_CODE, User::NORMAL_USER_CODE])) {
             return $this->sendFailedLoginResponse($request);
         }
 
         // Check if the user's status is not 1 (active)
-        if (@$user->status != 1) {
+        if (@$user && $user->status != 1) {
             return redirect()->back()->with([
                 'alert-type' => 'error',
-                'message' => 'Your account is not active.',
+                'message' => 'Your account is not active. Please wait for admin approval.',
             ], 403);
         }
 
@@ -169,10 +171,19 @@ class LoginController extends Controller
             return $response;
         }
 
+        $user = $this->guard()->user();
+        $redirectTo = '/dashboard';
+
+        if ($user->user_type == User::TRAVEL_AGENCY_USER_CODE) {
+            $redirectTo = '/travel-agency/dashboard';
+        } elseif ($user->user_type == User::NORMAL_USER_CODE) {
+            $redirectTo = '/member/dashboard';
+        }
+
         return $request->wantsJson()
             ? new JsonResponse([], 204)
             : redirect()
-            ->intended('/dashboard')
+            ->intended($redirectTo)
             ->with(['message' => 'Login Successful .', 'alert-type' => 'success']);
     }
 

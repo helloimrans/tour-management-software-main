@@ -5,29 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Storage;
 
-class Tour extends Model
+class Expense extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name',
+        'tour_id',
+        'category',
         'description',
-        'image',
-        'status',
+        'amount',
+        'expense_date',
         'created_by',
         'updated_by',
         'deleted_by',
     ];
 
-    protected $appends = ['image_url'];
+    protected $casts = [
+        'amount' => 'decimal:2',
+        'expense_date' => 'date',
+    ];
 
-    public function getImageUrlAttribute()
+    public function tour()
     {
-        return $this->image
-            ? url(Storage::url($this->image))
-            : asset('defaults/noimage/no_img.jpg');
+        return $this->belongsTo(Tour::class);
     }
 
     public function createdBy()
@@ -42,10 +43,5 @@ class Tour extends Model
         return $this->belongsTo(User::class, 'updated_by', 'id')->withDefault([
             'first_name' => '--',
         ]);
-    }
-
-    public function users()
-    {
-        return $this->hasMany(User::class, 'tour_id', 'id');
     }
 }
