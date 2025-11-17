@@ -67,11 +67,6 @@ class User extends Authenticatable implements LaratrustUserContract
         return url(Storage::url($this->profile_pic));
     }
 
-    public function point()
-    {
-        return $this->hasOne(Point::class);
-    }
-
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by', 'id')->withDefault([

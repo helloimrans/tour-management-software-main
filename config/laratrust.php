@@ -121,7 +121,6 @@ return [
         /**
          * Will be used only if the teams functionality is enabled.
          */
-        'team' => \App\Models\Team::class,
     ],
 
     /*
