@@ -8,12 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Laratrust\Traits\HasRolesAndPermissions;
-use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Contracts\LaratrustUser as LaratrustUserContract;
 
 class User extends Authenticatable implements LaratrustUserContract
 {
-    use HasFactory, Notifiable, SoftDeletes, HasApiTokens, HasRolesAndPermissions;
+    use HasFactory, Notifiable, SoftDeletes, HasRolesAndPermissions;
 
     const ADMIN_USER_CODE = '1';
     const NORMAL_USER_CODE = '2';
