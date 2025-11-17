@@ -163,7 +163,7 @@ class AdminUserService
 
                 return '<div class="custom-control custom-switch">
                     <input type="checkbox" class="custom-control-input change-status-checkbox"
-                           id="' . $switchId . '" data-id="' . $row->id . '" ' . $checked . '>
+                           id="' . $switchId . '" data-id="' . $row->id . '" data-table="users" data-column="status" ' . $checked . '>
                     <label class="custom-control-label" for="' . $switchId . '"></label>
                 </div>';
             })

@@ -735,49 +735,21 @@ body {
     outline: none;
 }
 
-/* Status Switch Modern */
-.custom-switch {
-    padding-left: 3rem;
+/* Ensure Switch Toggle Works */
+.custom-switch .custom-control-input {
+    cursor: pointer;
+    z-index: 1;
 }
 
-.custom-control-input {
-    width: 3rem;
-    height: 1.75rem;
+.custom-switch .custom-control-label {
     cursor: pointer;
 }
 
-.custom-control-label {
-    cursor: pointer;
-    padding-left: 0.5rem;
+.custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #28a745;
+    border-color: #28a745;
 }
 
-.custom-control-label::before {
-    width: 3rem;
-    height: 1.75rem;
-    border-radius: 1rem;
-    background: #d1d5db;
-    border: none;
-    transition: all 0.3s ease;
-}
-
-.custom-control-input:checked ~ .custom-control-label::before {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-.custom-control-label::after {
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    background: #fff;
-    top: 0.125rem;
-    left: 0.125rem;
-    transition: transform 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.custom-control-input:checked ~ .custom-control-label::after {
-    transform: translateX(1.25rem);
-}
 
 /* Additional Button Styles */
 .create-button {
