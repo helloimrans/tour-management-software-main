@@ -32,7 +32,7 @@ class User extends Authenticatable implements LaratrustUserContract
         'own_coupon_code',
         'used_coupon_code',
         'profile_pic',
-        'radio_station_id',
+        'tour_id',
         'address',
     ];
 
@@ -87,8 +87,8 @@ class User extends Authenticatable implements LaratrustUserContract
         return $query->where(['user_type' => self::NORMAL_USER_CODE]);
     }
 
-    public function radioStation()
+    public function tour()
     {
-        return $this->belongsTo(RadioStation::class, 'radio_station_id', 'id');
+        return $this->belongsTo(Tour::class, 'tour_id', 'id');
     }
 }

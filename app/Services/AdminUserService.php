@@ -36,7 +36,7 @@ class AdminUserService
             'password' => $id
                 ? ['nullable', 'string', 'min:5']
                 : ['required', 'string', 'min:5'],
-            'radio_station_id' => ['nullable', 'integer', 'exists:radio_stations,id'],
+            'tour_id' => ['nullable', 'integer', 'exists:tours,id'],
             'role_id' => ['required', 'array', 'min:1'],
             'role_id.*' => ['required', 'integer', 'exists:roles,id'],
         ];
@@ -76,7 +76,7 @@ class AdminUserService
 
     public function show(int $id): User
     {
-        return User::with(['roles', 'radioStation'])
+        return User::with(['roles', 'tour'])
             ->where('user_type', User::ADMIN_USER_CODE)
             ->findOrFail($id);
     }
@@ -130,7 +130,7 @@ class AdminUserService
     {
         $authUser = AuthHelper::getAuthUser();
 
-        $data = User::with(['createdBy', 'updatedBy', 'radioStation:id,name', 'roles'])
+        $data = User::with(['createdBy', 'updatedBy', 'tour:id,name', 'roles'])
             ->adminUser()
             ->latest();
 
@@ -141,8 +141,8 @@ class AdminUserService
             ->addColumn('updated_by_name', function ($row) {
                 return $row->updatedBy->first_name . ' ' . ($row->updatedBy->last_name ?? '') ?? '-';
             })
-            ->addColumn('radio_station', function ($row) {
-                return $row->radioStation->name ?? 'All Radio Stations';
+            ->addColumn('tour', function ($row) {
+                return $row->tour->name ?? 'All Tours';
             })
             ->addColumn('roles', function ($user) {
                 return $user->roles->pluck('display_name')->implode(', ') ?: '-';
@@ -193,7 +193,7 @@ class AdminUserService
 
                 return $actions ?: '-';
             })
-            ->rawColumns(['action', 'status', 'profile_pic'])
+            ->rawColumns(['action', 'status', 'profile_pic', 'tour'])
             ->make(true);
     }
 }

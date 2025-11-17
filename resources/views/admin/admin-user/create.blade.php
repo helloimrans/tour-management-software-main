@@ -25,17 +25,17 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="radio_station_id" class="form-label">Radio Station</label>
-                                            <select name="radio_station_id" class="form-control" id="radio_station_id">
-                                                <option value="">All Radio Stations</option>
-                                                @foreach($radioStations as $radioStation)
-                                                    <option value="{{ $radioStation->id }}"
-                                                            {{ old('radio_station_id') == $radioStation->id ? 'selected' : '' }}>
-                                                        {{ $radioStation->name }}
+                                            <label for="tour_id" class="form-label">Tour</label>
+                                            <select name="tour_id" class="form-control" id="tour_id">
+                                                <option value="">All Tours</option>
+                                                @foreach($tours as $tour)
+                                                    <option value="{{ $tour->id }}"
+                                                            {{ old('tour_id') == $tour->id ? 'selected' : '' }}>
+                                                        {{ $tour->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @error('radio_station_id')
+                                            @error('tour_id')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>

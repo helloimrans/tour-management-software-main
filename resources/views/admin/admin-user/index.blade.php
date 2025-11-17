@@ -51,8 +51,8 @@
                         orderable: false,
                     },
                     {
-                        title: 'Radio Station',
-                        data: 'radio_station'
+                        title: 'Tour',
+                        data: 'tour'
                     },
                     {
                         title: 'First Name',

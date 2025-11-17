@@ -4,7 +4,7 @@
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">{{auth()->user()->radioStation->name ?? 'All Radio Station'}}</a>
+            <a class="nav-link" href="#">{{auth()->user()->tour->name ?? 'All Tours'}}</a>
         </li>
     </ul>
 

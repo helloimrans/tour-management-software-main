@@ -5,21 +5,21 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Services\AdminUserService;
-use App\Services\RadioStationService;
+use App\Services\TourService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
 class AdminUserController extends Controller
 {
     protected AdminUserService $adminUserService;
-    protected RadioStationService $radioStationService;
+    protected TourService $tourService;
 
     public function __construct(
         AdminUserService $adminUserService,
-        RadioStationService $radioStationService
+        TourService $tourService
     ) {
         $this->adminUserService = $adminUserService;
-        $this->radioStationService = $radioStationService;
+        $this->tourService = $tourService;
     }
 
     public function index()
@@ -34,7 +34,7 @@ class AdminUserController extends Controller
     public function create()
     {
         $data = [
-            'radioStations' => $this->radioStationService->getAll(),
+            'tours' => $this->tourService->getAll(),
             'roles' => Role::all(),
         ];
 
@@ -70,7 +70,7 @@ class AdminUserController extends Controller
     {
         $data = [
             'data' => $this->adminUserService->show($id),
-            'radioStations' => $this->radioStationService->getAll(),
+            'tours' => $this->tourService->getAll(),
             'roles' => Role::all(),
         ];
 

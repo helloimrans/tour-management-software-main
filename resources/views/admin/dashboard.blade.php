@@ -37,12 +37,12 @@
                 </div>
 
                 <div class="col-12 col-sm-6 col-md-3">
-                    <a href="{{ route('radio.stations.index') }}" class="text-decoration-none text-dark">
+                    <a href="{{ route('tour.index') }}" class="text-decoration-none text-dark">
                         <div class="info-box mb-3">
-                            <span class="info-box-icon bg-danger elevation-1"><i class="bx bx-radio"></i></span>
+                            <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-map-marked-alt"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Radio Station</span>
-                                <span class="info-box-number">{{ $data['radio_stations'] }}</span>
+                                <span class="info-box-text">Total Tours</span>
+                                <span class="info-box-number">{{ $data['tours'] }}</span>
                             </div>
                         </div>
                     </a>

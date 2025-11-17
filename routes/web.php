@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\RadioStationController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\StatusController;
@@ -78,8 +77,6 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
 
     Route::resource('general-users', UserController::class)->names('general.user');
     Route::resource('admin-users', AdminUserController::class)->names('admin.user');
-
-    Route::resource('radio-stations', RadioStationController::class)->names('radio.stations');
 
     Route::resource('tours', TourController::class)->names('tour');
 
