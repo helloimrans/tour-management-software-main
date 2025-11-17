@@ -8,68 +8,69 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card  dashboard-custom-card">
-                    <div class="card-body">
-                        <div class="custom-card-header d-flex justify-content-between">
-                            <h4>{{ $edit?'Edit Role':'Create Role' }}</h4>
-                            <a href="{{route('roles.index')}}" class="btn btn-primary">
-                                <i class="fa fa-arrow-circle-left"></i> Back
-                            </a>
-                        </div>
-                        <form
-                            action="{{$edit ? route('roles.update', $role->id) : route('roles.store')}}"
-                            method="POST" class="edit-add-form">
-                            @csrf
-                            @if($edit)
-                                @method('put')
-                            @endif
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="name" id="name"
-                                               value="{{$edit ? $role->name : old('name')}}"
-                                               placeholder="Name" required>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="display_name" class="form-label">Display Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="display_name" id="display_name"
-                                               value="{{$edit ? $role->display_name : old('display_name')}}"
-                                               placeholder="Display Name" required>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="description" class="form-label">Description</label>
-                                        <textarea class="form-control" name="description" id="description" rows="4"
-                                                  placeholder="Description">{{$edit ? $role->description : old('description')}}</textarea>
-                                    </div>
-                                </div>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="card dashboard-custom-card">
+                        <div class="card-body">
+                            <div class="custom-card-header d-flex justify-content-between">
+                                <h4>{{ $edit?'Edit Role':'Create Role' }}</h4>
+                                <a href="{{route('roles.index')}}" class="btn btn-primary">
+                                    <i class="fa fa-arrow-circle-left"></i> Back
+                                </a>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-save"></i> {{ $edit?'Update Role':'Create Role' }}
-                                    </button>
-                                </div>
-                            </div>
+                            <form
+                                action="{{$edit ? route('roles.update', $role->id) : route('roles.store')}}"
+                                method="POST" class="edit-add-form">
+                                @csrf
+                                @if($edit)
+                                    @method('put')
+                                @endif
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="name" id="name"
+                                                   value="{{$edit ? $role->name : old('name')}}"
+                                                   placeholder="Name" required>
+                                        </div>
+                                    </div>
 
-                        </form>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="display_name" class="form-label">Display Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="display_name" id="display_name"
+                                                   value="{{$edit ? $role->display_name : old('display_name')}}"
+                                                   placeholder="Display Name" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="description" class="form-label">Description</label>
+                                            <textarea class="form-control" name="description" id="description" rows="4"
+                                                      placeholder="Description">{{$edit ? $role->description : old('description')}}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-save"></i> {{ $edit?'Update Role':'Create Role' }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 @endsection
+
 @push('css')
     <style>
         .custom-radio-is-deletable{
@@ -107,5 +108,3 @@
         });
     </script>
 @endpush
-
-

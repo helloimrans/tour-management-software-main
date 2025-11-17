@@ -8,66 +8,69 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card dashboard-custom-card">
-                    <div class="card-body">
-                        <div class="custom-card-header d-flex justify-content-between">
-                            <h4>{{ $edit ? 'Edit Permission' : 'Create Permission' }}</h4>
-                            <a href="{{ route('permissions.index') }}" class="btn btn-primary">
-                                <i class="fa fa-arrow-circle-left"></i> Back
-                            </a>
-                        </div>
-                        <form
-                            action="{{ $edit ? route('permissions.update', $permission->id) : route('permissions.store') }}"
-                            method="POST" class="edit-add-form">
-                            @csrf
-                            @if ($edit)
-                                @method('put')
-                            @endif
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="name" id="name"
-                                            value="{{ $edit ? $permission->name : old('name') }}"
-                                            placeholder="Enter unique permission name" required>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="card dashboard-custom-card">
+                        <div class="card-body">
+                            <div class="custom-card-header d-flex justify-content-between">
+                                <h4>{{ $edit ? 'Edit Permission' : 'Create Permission' }}</h4>
+                                <a href="{{ route('permissions.index') }}" class="btn btn-primary">
+                                    <i class="fa fa-arrow-circle-left"></i> Back
+                                </a>
+                            </div>
+
+                            <form
+                                action="{{ $edit ? route('permissions.update', $permission->id) : route('permissions.store') }}"
+                                method="POST" class="edit-add-form">
+                                @csrf
+                                @if ($edit)
+                                    @method('put')
+                                @endif
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="name" id="name"
+                                                   value="{{ $edit ? $permission->name : old('name') }}"
+                                                   placeholder="Enter unique permission name" required>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="display_name" class="form-label">Display Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="display_name" id="display_name"
-                                            value="{{ $edit ? $permission->display_name : old('display_name') }}"
-                                            placeholder="Display Name" required>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="display_name" class="form-label">Display Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="display_name" id="display_name"
+                                                   value="{{ $edit ? $permission->display_name : old('display_name') }}"
+                                                   placeholder="Display Name" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="group_name" class="form-label">Group Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="group_name" id="group_name"
+                                                   value="{{ $edit ? $permission->group_name : old('group_name') }}"
+                                                   placeholder="Group name" required>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="group_name" class="form-label">Group Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="group_name" id="group_name"
-                                            value="{{ $edit ? $permission->group_name : old('group_name') }}"
-                                            placeholder="Group name" required>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-save"></i> {{ $edit ? 'Update Permission' : 'Create Permission' }}
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-save"></i> {{ $edit ? 'Update Permission' : 'Create Permission' }}
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
 @push('js')
     <x-generic-validation-error-toastr />
     <script>

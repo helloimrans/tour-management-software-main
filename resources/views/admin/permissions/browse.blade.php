@@ -18,10 +18,10 @@
                                 </a>
                                 @endpermission
                             </div>
-                        <div class="table-responsive">
-                            <table class="table datatable custom-table dt-responsive nowrap">
-
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table datatable custom-table dt-responsive nowrap">
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,9 @@
         $(function() {
             table = $('.datatable').DataTable({
                 processing: true,
+                responsive: true,
                 serverSide: true,
+                scrollX: true,
                 ajax: "{{ route('permissions.datatable') }}",
                 columns: [{
                         title: "SL#",
@@ -48,7 +50,6 @@
                         searchable: false,
                         orderable: false
                     },
-
                     {
                         title: "Name",
                         data: "name"
@@ -66,7 +67,8 @@
                 ]
             });
 
-            $(document, 'td').on('click', '.delete', function (e) {
+            $(document).on('click', '.delete', function(e) {
+                e.preventDefault();
                 $('#delete_form')[0].action = $(this).data('action');
                 $('#delete_modal').modal('show');
             });

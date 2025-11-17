@@ -5,10 +5,11 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col">
-                <div class="card dashboard-custom-card">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="card dashboard-custom-card">
                     <div class="card-body">
                         <div class="custom-card-header d-flex justify-content-between">
                             <h4>Role Permissions</h4>

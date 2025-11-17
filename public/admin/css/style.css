@@ -750,6 +750,42 @@ body {
     border-color: #28a745;
 }
 
+/* Prevent DataTable Layout Shift */
+.table-responsive {
+    min-height: 200px;
+}
+
+.datatable {
+    width: 100% !important;
+}
+
+.dataTables_wrapper {
+    position: relative;
+}
+
+.dataTables_processing {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer Positioning Fix */
+.content-wrapper {
+    min-height: calc(100vh - 57px - 57px);
+}
+
+.main-footer {
+    padding: 1rem;
+    background-color: #fff;
+    border-top: 1px solid #dee2e6;
+}
+
 
 /* Additional Button Styles */
 .create-button {
