@@ -134,8 +134,8 @@ label:not(.form-check-label):not(.custom-file-label) {
     gap: 1rem;
 }
 .custom-card-header h4 {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
     color: #1f2937;
     margin: 0;
 }
@@ -147,9 +147,9 @@ label:not(.form-check-label):not(.custom-file-label) {
     color: #fff;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     border-radius: 8px;
-    padding: 0.625rem 1.25rem;
+    padding: 0.5rem 1rem;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
     text-decoration: none;
     border: none;
     transition: all 0.3s ease;
@@ -621,9 +621,9 @@ label:not(.form-check-label):not(.custom-file-label) {
 /* Modern Button Styles */
 .btn {
     border-radius: 8px;
-    padding: 0.625rem 1.25rem;
+    padding: 0.5rem 1rem;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
     transition: all 0.3s ease;
     border: none;
     display: inline-flex;
