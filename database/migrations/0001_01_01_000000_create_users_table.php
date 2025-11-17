@@ -14,13 +14,18 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->unsignedTinyInteger('user_type');
+            $table->unsignedBigInteger('radio_station_id')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('email')->unique()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone')->unique()->nullable();
             $table->string('profile_pic')->nullable();
+            $table->string('address')->nullable();
             $table->string('password');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
             $table->string('own_coupon_code')->nullable()->unique();
             $table->string('used_coupon_code')->nullable();
             $table->unsignedTinyInteger('status')->nullable()->default(1);
