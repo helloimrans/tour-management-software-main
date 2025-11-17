@@ -48,31 +48,6 @@
                     </a>
                 </div>
 
-                <div class="clearfix hidden-md-up"></div>
-
-                <div class="col-12 col-sm-6 col-md-3">
-                    <a href="{{ route('music.index') }}" class="text-decoration-none text-dark">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-success elevation-1"><i class="fa fa-music"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Music</span>
-                                <span class="info-box-number">{{ $data['total_music'] }}</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-12 col-sm-6 col-md-3">
-                    <a href="{{ route('service.index') }}" class="text-decoration-none text-dark">
-                        <div class="info-box mb-3">
-                            <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-layer-group"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Service</span>
-                                <span class="info-box-number">{{ $data['total_services'] }}</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
             </div>
 
         </div>

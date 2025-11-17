@@ -9,8 +9,6 @@ class DashboardService
         return [
             'total_members' => 150,
             'radio_stations' => 25,
-            'total_music' => 500,
-            'total_services' => 30,
         ];
     }
 }
