@@ -66,7 +66,7 @@
                 <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right profile-dd">
                     <span class="dropdown-header">
                         <div class="profile-dd-logo custom-bg-blue">
-                            <img src="{{ $settings->app_logo_url ?? asset('frontend/logo/logo.svg') }}" style="height: 100px;" alt="{{ $settings->app_name ?? 'Logo' }}">
+                            <img src="{{ $settings->app_logo_url ?? asset('frontend/logo/logo.png') }}" style="height: 100px;" alt="{{ $settings->app_name ?? 'Logo' }}">
                         </div>
                         <div class="profile-dd-info">
                             @if (auth()->user()->profile_pic)

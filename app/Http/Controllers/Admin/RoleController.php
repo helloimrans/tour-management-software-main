@@ -24,12 +24,18 @@ class RoleController extends Controller
 
     public function create()
     {
+        if (!auth()->user()->hasPermission('roles-create')) {
+            abort(403, 'Unauthorized action.');
+        }
         $role = new Role();
         return view('admin.roles.edit-add', compact('role'));
     }
 
     public function store(Request $request)
     {
+        if (!auth()->user()->hasPermission('roles-create')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $validatedData = $request->validate([
                 'display_name' => ['required', 'string', 'max:255'],
@@ -60,16 +66,25 @@ class RoleController extends Controller
 
     public function show(Role $role)
     {
+        if (!auth()->user()->hasPermission('roles-read')) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('admin.roles.read', compact('role'));
     }
 
     public function edit(Role $role)
     {
+        if (!auth()->user()->hasPermission('roles-update')) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('admin.roles.edit-add', compact('role'));
     }
 
     public function update(Request $request, Role $role)
     {
+        if (!auth()->user()->hasPermission('roles-update')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $validatedData = $request->validate([
                 'display_name' => ['required', 'string', 'max:255'],
@@ -100,6 +115,9 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
+        if (!auth()->user()->hasPermission('roles-delete')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $this->roleService->deleteRole($role);
 
@@ -123,12 +141,18 @@ class RoleController extends Controller
 
     public function rolePermissionIndex(Role $role)
     {
+        if (!auth()->user()->hasPermission('roles-change-permission')) {
+            abort(403, 'Unauthorized action.');
+        }
         $permissionsGroupByTable = Permission::all()->groupBy('group_name');
         return view('admin.roles.permissions', compact('role', 'permissionsGroupByTable'));
     }
 
     public function rolePermissionSync(Request $request, Role $role)
     {
+        if (!auth()->user()->hasPermission('roles-change-permission')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $permissions = $request->input('permissions', []);
             $this->roleService->syncRolePermission($role, $permissions);

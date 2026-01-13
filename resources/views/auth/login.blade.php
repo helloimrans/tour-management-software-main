@@ -12,7 +12,7 @@
                     <div class="register-box mt-4 mt-md-0">
                         <div class="bg-white-custom radius-14 padding-30">
                             <div class="text-center mb-4">
-                                <img src="{{ $settings->app_logo_url ?? asset('frontend/logo/logo.svg') }}" alt="{{ $settings->app_name ?? 'Logo' }}" style="max-height: 80px; width: auto;">
+                                <img src="{{ $settings->app_logo_url ?? asset('frontend/logo/logo.png') }}" alt="{{ $settings->app_name ?? 'Logo' }}" style="max-height: 80px; width: auto;">
                             </div>
                             <div class="login-title">
                                 <p>{{__('messages.login')}}</p>

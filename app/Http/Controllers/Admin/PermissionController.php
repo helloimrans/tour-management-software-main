@@ -23,12 +23,18 @@ class PermissionController extends Controller
 
     public function create()
     {
+        if (!auth()->user()->hasPermission('permissions-create')) {
+            abort(403, 'Unauthorized action.');
+        }
         $permission = new Permission();
         return view('admin.permissions.edit-add', compact('permission'));
     }
 
     public function store(Request $request)
     {
+        if (!auth()->user()->hasPermission('permissions-create')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $validatedData = $request->validate([
                 'name' => ['required', 'string', 'max:191', 'unique:permissions,name'],
@@ -59,16 +65,25 @@ class PermissionController extends Controller
 
     public function show(Permission $permission)
     {
+        if (!auth()->user()->hasPermission('permissions-read')) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('admin.permissions.read', compact('permission'));
     }
 
     public function edit(Permission $permission)
     {
+        if (!auth()->user()->hasPermission('permissions-update')) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('admin.permissions.edit-add', compact('permission'));
     }
 
     public function update(Request $request, Permission $permission)
     {
+        if (!auth()->user()->hasPermission('permissions-update')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $validatedData = $request->validate([
                 'name' => ['required', 'string', 'max:191', 'unique:permissions,name,' . $permission->id],
@@ -99,6 +114,9 @@ class PermissionController extends Controller
 
     public function destroy(Permission $permission)
     {
+        if (!auth()->user()->hasPermission('permissions-delete')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $this->permissionService->deletePermission($permission);
 

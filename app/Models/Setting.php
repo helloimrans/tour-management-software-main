@@ -16,7 +16,7 @@ class Setting extends Model
     public function getAppLogoUrlAttribute(): ?string
     {
         if (!$this->app_logo) {
-            return asset('frontend/logo/logo.svg');
+            return asset('frontend/logo/logo.png');
         }
         return url(Storage::url($this->app_logo));
     }

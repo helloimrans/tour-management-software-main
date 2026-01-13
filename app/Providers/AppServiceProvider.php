@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
                 $settings = (object) [
                     'app_name' => config('app.name', 'Tour Management'),
                     'app_slogan' => null,
-                    'app_logo_url' => asset('frontend/logo/logo.svg'),
+                    'app_logo_url' => asset('frontend/logo/logo.png'),
                     'app_background_image_url' => null,
                 ];
             }

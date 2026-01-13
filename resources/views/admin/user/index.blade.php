@@ -30,6 +30,11 @@
                         <div class="card-body">
                             <div class="custom-card-header d-flex justify-content-between">
                                 <h4>Members List</h4>
+                                @if(auth()->check() && auth()->user()->hasPermission('general-user-create'))
+                                <a href="{{ route('general.user.create') }}" class="btn btn-primary">
+                                    <i class="fa-solid fa-circle-plus"></i> Add New Member
+                                </a>
+                                @endif
                             </div>
                             <div class="table-responsive">
                                 <table class="table datatable custom-table dt-responsive nowrap">

@@ -29,6 +29,9 @@ class AdminUserController extends Controller
 
     public function create()
     {
+        if (!auth()->user()->hasPermission('admin-user-create')) {
+            abort(403, 'Unauthorized action.');
+        }
         $data = [
             'roles' => Role::all(),
         ];
@@ -38,6 +41,9 @@ class AdminUserController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth()->user()->hasPermission('admin-user-create')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $validatedData = $this->adminUserService->validator($request->all());
             $this->adminUserService->store($validatedData);
@@ -63,6 +69,9 @@ class AdminUserController extends Controller
 
     public function edit(string $id)
     {
+        if (!auth()->user()->hasPermission('admin-user-update')) {
+            abort(403, 'Unauthorized action.');
+        }
         $data = [
             'data' => $this->adminUserService->show($id),
             'roles' => Role::all(),
@@ -75,6 +84,9 @@ class AdminUserController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if (!auth()->user()->hasPermission('admin-user-update')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $validatedData = $this->adminUserService->validator($request->all(), $id);
             $this->adminUserService->update($id, $validatedData);
@@ -100,6 +112,9 @@ class AdminUserController extends Controller
 
     public function destroy(string $id)
     {
+        if (!auth()->user()->hasPermission('admin-user-delete')) {
+            abort(403, 'Unauthorized action.');
+        }
         try {
             $this->adminUserService->delete($id);
 

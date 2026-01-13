@@ -72,4 +72,31 @@ class UserService
             ->rawColumns(['action', 'status', 'profile_pic'])
             ->make(true);
     }
+
+    public function store(array $input): User
+    {
+        if (isset($input['profile_pic'])) {
+            $input['profile_pic'] = uploadFile($input['profile_pic'], 'profile_pic');
+        }
+
+        if (isset($input['password'])) {
+            $input['password'] = \Illuminate\Support\Facades\Hash::make($input['password']);
+        }
+
+        $input['user_type'] = User::NORMAL_USER_CODE;
+        $input['status'] = 1; // Active by default when created by admin
+        $input['created_by'] = auth()->id();
+        $input['updated_by'] = auth()->id();
+
+        $roles = $input['role_id'] ?? [];
+        unset($input['role_id']);
+
+        $user = User::create($input);
+
+        if (!empty($roles)) {
+            $user->syncRoles($roles);
+        }
+
+        return $user;
+    }
 }

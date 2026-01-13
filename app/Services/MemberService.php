@@ -23,9 +23,15 @@ class MemberService
         }
 
         $input['user_type'] = User::NORMAL_USER_CODE;
-        $input['status'] = 0; // Inactive until admin approval
+        $input['status'] = 0; // Set to 0 (pending/inactive) - requires admin approval
 
-        return User::create($input);
+        $user = User::create($input);
+
+        // Ensure status is explicitly set to 0 (in case of any default override)
+        $user->status = 0;
+        $user->save();
+
+        return $user->fresh();
     }
 
     public function updateProfile(int $userId, array $input): User
