@@ -29,12 +29,11 @@ class User extends Authenticatable implements LaratrustUserContract
         'password',
         'user_type',
         'phone',
-        'own_coupon_code',
-        'used_coupon_code',
         'profile_pic',
-        'tour_id',
         'address',
-        'company_name',
+        'status',
+        'created_by',
+        'updated_by',
     ];
 
     protected $appends = ['profile_pic_url'];
@@ -86,11 +85,6 @@ class User extends Authenticatable implements LaratrustUserContract
 
     public function scopeGeneralUser($query){
         return $query->where(['user_type' => self::NORMAL_USER_CODE]);
-    }
-
-    public function tour()
-    {
-        return $this->belongsTo(Tour::class, 'tour_id', 'id');
     }
 
     public function tourMemberships()

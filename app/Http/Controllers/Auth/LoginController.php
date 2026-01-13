@@ -65,8 +65,8 @@ class LoginController extends Controller
             ->orWhere('phone', $request->email)
             ->first();
 
-        // Check if the user type is ADMIN_USER_CODE, TRAVEL_AGENCY_USER_CODE, or NORMAL_USER_CODE
-        if (@$user && !in_array($user->user_type, [User::ADMIN_USER_CODE, User::TRAVEL_AGENCY_USER_CODE, User::NORMAL_USER_CODE])) {
+        // Check if the user type is ADMIN_USER_CODE or NORMAL_USER_CODE
+        if (@$user && !in_array($user->user_type, [User::ADMIN_USER_CODE, User::NORMAL_USER_CODE])) {
             return $this->sendFailedLoginResponse($request);
         }
 
@@ -174,10 +174,10 @@ class LoginController extends Controller
         $user = $this->guard()->user();
         $redirectTo = '/dashboard';
 
-        if ($user->user_type == User::TRAVEL_AGENCY_USER_CODE) {
-            $redirectTo = '/travel-agency/dashboard';
-        } elseif ($user->user_type == User::NORMAL_USER_CODE) {
+        if ($user->user_type == User::NORMAL_USER_CODE) {
             $redirectTo = '/member/dashboard';
+        } elseif ($user->user_type == User::ADMIN_USER_CODE) {
+            $redirectTo = '/dashboard';
         }
 
         return $request->wantsJson()

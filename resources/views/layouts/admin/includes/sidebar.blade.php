@@ -15,19 +15,56 @@
         <!-- Sidebar Menu -->
         <nav class="mt-4">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-                @if(auth()->check() && auth()->user()->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE)
-                    {{-- Travel Agency Menu --}}
-                    <x-nav-item routeName="travel.agency.dashboard" permissionKey="dashboard-menu" iconClass="fa-gauge-high" label="Dashboard" />
-                    <x-nav-item routeName="tour.index" permissionKey="tour-menu" iconClass="fa-map-location-dot" label="Tours" />
-                    <x-nav-item routeName="travel.agency.members" permissionKey="member-management-menu" iconClass="fa-users" label="Members" />
-                    <x-nav-item routeName="expense.index" permissionKey="expense-menu" iconClass="fa-money-bill" label="Expenses" />
-                    <x-nav-item routeName="payment.index" permissionKey="payment-menu" iconClass="fa-credit-card" label="Payments" />
+                @if(auth()->check() && auth()->user()->user_type == \App\Models\User::NORMAL_USER_CODE)
+                    {{-- Member Menu --}}
+                    <x-nav-item routeName="member.dashboard" iconClass="fa-gauge-high" label="Dashboard" />
+                    <x-nav-item routeName="member.profile" iconClass="fa-user" label="My Profile" />
+                    <x-nav-item routeName="member.tours" iconClass="fa-map-location-dot" label="Browse Tours" />
+                    <x-nav-item routeName="member.current-tour" iconClass="fa-plane-departure" label="My Current Tour" />
+                    <x-nav-item routeName="member.tour-history" iconClass="fa-history" label="Tour History" />
+                    <x-nav-item routeName="member.add-payment" iconClass="fa-money-bill-wave" label="Add Payment" />
+                    <x-nav-item routeName="member.payment-history" iconClass="fa-credit-card" label="Payment History" />
                 @else
-                    {{-- Platform Admin Menu --}}
+                    {{-- Admin Menu --}}
                     <x-nav-item routeName="admin.dashboard" permissionKey="dashboard-menu" iconClass="fa-gauge-high"
                         label="Dashboard" />
 
-                    <x-nav-item routeName="" iconClass="fa-users" permissionKey="user-management-menu"
+                    {{-- Tour Management --}}
+                    <x-nav-item routeName="" iconClass="fa-map-marked-alt" permissionKey="tour-management-menu"
+                        label="Tour Management" :submenu="[
+                            [
+                                'route' => 'tour.index',
+                                'icon' => 'fa-map-location-dot',
+                                'permissionKey' => 'tour-menu',
+                                'label' => 'Tours',
+                            ],
+                            [
+                                'route' => 'member-management.index',
+                                'icon' => 'fa-users',
+                                'permissionKey' => 'member-management-menu',
+                                'label' => 'Member Management',
+                            ],
+                        ]" />
+
+                    {{-- Financial Management --}}
+                    <x-nav-item routeName="" iconClass="fa-money-bill-wave" permissionKey="financial-menu"
+                        label="Financial Management" :submenu="[
+                            [
+                                'route' => 'expense.index',
+                                'icon' => 'fa-receipt',
+                                'permissionKey' => 'expense-menu',
+                                'label' => 'Expenses',
+                            ],
+                            [
+                                'route' => 'payment.index',
+                                'icon' => 'fa-credit-card',
+                                'permissionKey' => 'payment-menu',
+                                'label' => 'Payments',
+                            ],
+                        ]" />
+
+                    {{-- User Management --}}
+                    <x-nav-item routeName="" iconClass="fa-users-gear" permissionKey="user-management-menu"
                         label="User Management" :submenu="[
                             [
                                 'route' => 'admin.user.index',
@@ -37,9 +74,20 @@
                             ],
                             [
                                 'route' => 'general.user.index',
-                                'icon' => 'fa-users-gear',
+                                'icon' => 'fa-users',
                                 'permissionKey' => 'general-user-menu',
-                                'label' => 'General Users',
+                                'label' => 'Members',
+                            ],
+                        ]" />
+
+                    {{-- Role & Permissions --}}
+                    <x-nav-item routeName="" iconClass="fa-shield-halved" permissionKey="role-permission-menu"
+                        label="Roles & Permissions" :submenu="[
+                            [
+                                'route' => 'roles.index',
+                                'icon' => 'fa-user-tag',
+                                'permissionKey' => 'roles-menu',
+                                'label' => 'Roles',
                             ],
                             [
                                 'route' => 'permissions.index',
@@ -47,19 +95,7 @@
                                 'permissionKey' => 'permissions-menu',
                                 'label' => 'Permissions',
                             ],
-                            [
-                                'route' => 'roles.index',
-                                'icon' => 'fa-user-tag',
-                                'permissionKey' => 'roles-menu',
-                                'label' => 'Roles',
-                            ],
                         ]" />
-
-                    <x-nav-item routeName="tour.index" permissionKey="tour-menu"
-                        iconClass="fa-map-location-dot" label="Tours" />
-
-                    <x-nav-item routeName="travel.agency.index" permissionKey="travel-agency-menu"
-                        iconClass="fa-building" label="Travel Agencies" />
 
                     <x-nav-item routeName="setting" iconClass="fa-gear" permissionKey="settings-menu" label="Settings" />
                 @endif
