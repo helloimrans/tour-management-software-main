@@ -305,7 +305,7 @@
                 <div class="col-md-4">
                     <h5>Contact</h5>
                     <p><i class="fas fa-envelope"></i> info@tourmanagement.com</p>
-                    <p><i class="fas fa-phone"></i> +880 1234-567890</p>
+                    <p><i class="fas fa-phone"></i> 01755430927</p>
                 </div>
             </div>
             <hr class="border-secondary">
