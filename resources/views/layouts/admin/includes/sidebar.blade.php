@@ -56,6 +56,12 @@
                                 'label' => 'Expenses',
                             ],
                             [
+                                'route' => 'expense-category.index',
+                                'icon' => 'fa-list',
+                                'permissionKey' => 'expense-menu',
+                                'label' => 'Expense Categories',
+                            ],
+                            [
                                 'route' => 'payment.index',
                                 'icon' => 'fa-credit-card',
                                 'permissionKey' => 'payment-menu',

@@ -4,10 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TourMember extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    // Join status constants
+    const STATUS_PENDING = 'pending';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_CANCELLED = 'cancelled';
+    const STATUS_COMPLETED = 'completed';
 
     protected $fillable = [
         'tour_id',
@@ -18,6 +25,7 @@ class TourMember extends Model
         'join_status',
         'created_by',
         'updated_by',
+        'deleted_by',
     ];
 
     protected $casts = [

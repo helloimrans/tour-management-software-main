@@ -110,6 +110,12 @@ class TourService
             ->addColumn('action', function ($row) use ($authUser) {
                 $actions = '';
 
+                // Schedule button
+                $scheduleUrl = route('tour.schedule.index', $row->id);
+                $actions .= '<a href="' . $scheduleUrl . '" class="btn bg-gradient-info btn-xs mx-1" title="Manage Schedule">
+                    <i class="fa-solid fa-calendar-days"></i> Schedule
+                </a>';
+
                 if ($authUser->hasPermission('tour-update')) {
                     $editUrl = route('tour.edit', $row->id);
                     $actions .= '<a href="' . $editUrl . '" class="btn bg-gradient-primary btn-xs mx-1">

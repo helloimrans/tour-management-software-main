@@ -11,17 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tour_schedules', function (Blueprint $table) {
+        Schema::create('tour_members', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tour_id');
-            $table->date('schedule_date');
-            $table->string('title');
-            $table->text('details')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->string('room_no')->nullable();
+            $table->string('seat_no')->nullable();
+            $table->timestamp('joined_at')->useCurrent();
+            $table->string('join_status')->default('pending')->comment('pending, approved, cancelled, completed');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
             $table->timestamps();
-            
+            $table->softDeletes();
+
             $table->foreign('tour_id')->references('id')->on('tours')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unique(['tour_id', 'user_id']);
         });
     }
 
@@ -30,6 +36,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tour_schedules');
+        Schema::dropIfExists('tour_members');
     }
 };
+

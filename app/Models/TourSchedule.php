@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TourSchedule extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'tour_id',
@@ -16,6 +17,7 @@ class TourSchedule extends Model
         'details',
         'created_by',
         'updated_by',
+        'deleted_by',
     ];
 
     protected $casts = [

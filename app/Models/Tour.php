@@ -11,6 +11,12 @@ class Tour extends Model
 {
     use HasFactory, SoftDeletes;
 
+    // Status constants
+    const STATUS_UPCOMING = 'upcoming';
+    const STATUS_ONGOING = 'ongoing';
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_CLOSED = 'closed';
+
     protected $fillable = [
         'name',
         'destination',
@@ -41,6 +47,14 @@ class Tour extends Model
         return $this->image
             ? url(Storage::url($this->image))
             : asset('defaults/noimage/no_img.jpg');
+    }
+
+    /**
+     * Scope to filter active tours (upcoming or ongoing)
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereIn('status', ['upcoming', 'ongoing']);
     }
 
     public function createdBy()

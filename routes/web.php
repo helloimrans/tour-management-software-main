@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\StatusController;
 use App\Http\Controllers\Admin\TourController;
+use App\Http\Controllers\Admin\TourScheduleController;
 use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\ExpenseCategoryController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\MemberManagementController;
 
@@ -89,6 +91,12 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
 
     Route::resource('tours', TourController::class)->names('tour');
     
+    // Tour Schedule Management
+    Route::get('/tour-schedule/{tourId}', [TourScheduleController::class, 'index'])->name('tour.schedule.index');
+    Route::post('/tour-schedule', [TourScheduleController::class, 'store'])->name('tour.schedule.store');
+    Route::put('/tour-schedule/{id}', [TourScheduleController::class, 'update'])->name('tour.schedule.update');
+    Route::delete('/tour-schedule/{id}', [TourScheduleController::class, 'destroy'])->name('tour.schedule.destroy');
+    
     // Member Management
     Route::get('/member-management', [MemberManagementController::class, 'index'])->name('member-management.index');
     Route::post('/member-management/add-to-tour', [MemberManagementController::class, 'addToTour'])->name('member-management.add-to-tour');
@@ -97,6 +105,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
     
     // Expense Management
     Route::resource('expenses', ExpenseController::class)->names('expense');
+    Route::resource('expense-categories', ExpenseCategoryController::class)->names('expense-category');
     
     // Payment Management
     Route::resource('payments', PaymentController::class)->names('payment');
