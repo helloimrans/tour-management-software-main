@@ -7,14 +7,14 @@
     <div class="carousel-inner">
         <div class="carousel-item active">
             <div class="slider-content d-none d-md-block">
-                <h5>Tune into the Latest Hits</h5>
-                <p class="w-75">Experience non-stop music and stay updated with the latest chart-toppers, all day, every day.</p>
+                <h5>Discover Amazing Destinations</h5>
+                <p class="w-75">Join us on unforgettable journeys to breathtaking destinations. Experience the world's most beautiful places with our carefully curated tours.</p>
             </div>
         </div>
         <div class="carousel-item">
             <div class="slider-content d-none d-md-block">
-                <h5>Exclusive Interviews and Shows</h5>
-                <p class="w-75">Catch insightful interviews with your favorite artists and exclusive shows only on Relaks Media.</p>
+                <h5>Your Adventure Awaits</h5>
+                <p class="w-75">Create lasting memories with our expertly planned tours. From exotic locations to cultural experiences, we make travel dreams come true.</p>
             </div>
         </div>
 

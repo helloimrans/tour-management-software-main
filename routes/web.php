@@ -87,27 +87,28 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
     Route::put('/update-password', [UserController::class, 'updatePassword'])->name('update.password');
 
     Route::resource('general-users', UserController::class)->names('general.user');
+    Route::post('general-users/{id}/approve', [UserController::class, 'approve'])->name('general.user.approve');
     Route::post('general-users/{id}/assign-role', [UserController::class, 'assignRole'])->name('general.user.assign-role');
     Route::resource('admin-users', AdminUserController::class)->names('admin.user');
 
     Route::resource('tours', TourController::class)->names('tour');
-    
+
     // Tour Schedule Management
     Route::get('/tour-schedule/{tourId}', [TourScheduleController::class, 'index'])->name('tour.schedule.index');
     Route::post('/tour-schedule', [TourScheduleController::class, 'store'])->name('tour.schedule.store');
     Route::put('/tour-schedule/{id}', [TourScheduleController::class, 'update'])->name('tour.schedule.update');
     Route::delete('/tour-schedule/{id}', [TourScheduleController::class, 'destroy'])->name('tour.schedule.destroy');
-    
+
     // Member Management
     Route::get('/member-management', [MemberManagementController::class, 'index'])->name('member-management.index');
     Route::post('/member-management/add-to-tour', [MemberManagementController::class, 'addToTour'])->name('member-management.add-to-tour');
     Route::put('/member-management/{id}', [MemberManagementController::class, 'update'])->name('member-management.update');
     Route::delete('/member-management/{id}', [MemberManagementController::class, 'destroy'])->name('member-management.destroy');
-    
+
     // Expense Management
     Route::resource('expenses', ExpenseController::class)->names('expense');
     Route::resource('expense-categories', ExpenseCategoryController::class)->names('expense-category');
-    
+
     // Payment Management
     Route::resource('payments', PaymentController::class)->names('payment');
 

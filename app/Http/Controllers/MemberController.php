@@ -47,14 +47,29 @@ class MemberController extends Controller
                 ],
                 'password' => ['required', 'string', 'min:5', 'confirmed'],
                 'address' => ['nullable', 'string', 'max:500'],
+            ], [
+                'first_name.required' => 'First name is required.',
+                'first_name.max' => 'First name cannot exceed 191 characters.',
+                'last_name.max' => 'Last name cannot exceed 191 characters.',
+                'phone.required' => 'Phone number is required.',
+                'phone.regex' => 'Please enter a valid phone number (01XXXXXXXXX).',
+                'phone.unique' => 'This phone number is already registered.',
+                'email.email' => 'Please enter a valid email address.',
+                'email.max' => 'Email cannot exceed 191 characters.',
+                'email.unique' => 'This email is already registered.',
+                'profile_pic.mimes' => 'Profile picture must be an image file (jpg, jpeg, png, webp, svg, gif).',
+                'profile_pic.max' => 'Profile picture size cannot exceed 5MB.',
+                'password.required' => 'Password is required.',
+                'password.min' => 'Password must be at least 5 characters.',
+                'password.confirmed' => 'Password confirmation does not match.',
+                'address.max' => 'Address cannot exceed 500 characters.',
             ]);
 
             $user = $this->memberService->register($validatedData);
-            Auth::login($user);
 
-            return redirect()->route('member.dashboard')->with([
-                'message' => 'Registration successful!',
-                'alert-type' => 'success',
+            return redirect()->route('login')->with([
+                'message' => 'Registration successful! Your account is pending admin approval. You will be able to login once approved.',
+                'alert-type' => 'info',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();

@@ -72,10 +72,9 @@ class LoginController extends Controller
 
         // Check if the user's status is not 1 (active)
         if (@$user && $user->status != 1) {
-            return redirect()->back()->with([
-                'alert-type' => 'error',
-                'message' => 'Your account is not active. Please wait for admin approval.',
-            ], 403);
+            return redirect()->back()->withErrors([
+                'email' => 'Your account is not active. Please wait for admin approval.',
+            ])->withInput($request->only('email'));
         }
 
         $this->validateLogin($request);
@@ -93,6 +92,15 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
+            // Double check user status after authentication
+            $authenticatedUser = $this->guard()->user();
+            if ($authenticatedUser && $authenticatedUser->status != 1) {
+                $this->guard()->logout();
+                return redirect()->back()->withErrors([
+                    'email' => 'Your account is not active. Please wait for admin approval.',
+                ])->withInput($request->only('email'));
+            }
+            
             return $this->sendLoginResponse($request);
         }
 
@@ -143,11 +151,17 @@ class LoginController extends Controller
     protected function credentials(Request $request)
     {
         // return $request->only($this->username(), 'password');
+        $credentials = [];
         if (is_numeric($request->get('email'))) {
-            return ['phone' => $request->get('email'), 'password' => $request->get('password')];
+            $credentials = ['phone' => $request->get('email'), 'password' => $request->get('password')];
         } elseif (filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)) {
-            return ['email' => $request->get('email'), 'password' => $request->get('password')];
+            $credentials = ['email' => $request->get('email'), 'password' => $request->get('password')];
         }
+        
+        // Add status check - only allow active users (status = 1)
+        $credentials['status'] = 1;
+        
+        return $credentials;
     }
 
     /**

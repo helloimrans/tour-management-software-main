@@ -31,7 +31,12 @@
     $hasPermission = true;
 
     if (!empty($permissionKey)) {
-        if (!auth()->user()->hasPermission($permissionKey)) {
+        if (auth()->check() && auth()->user()) {
+            if (!auth()->user()->hasPermission($permissionKey)) {
+                $hasPermission = false;
+            }
+        } else {
+            // If user is not authenticated and permission is required, hide the menu item
             $hasPermission = false;
         }
     }

@@ -119,6 +119,79 @@
 @include('layouts.admin.includes.change-status', ['table' => 'users', 'column' => 'status'])
 
 <script>
+// Approve Member with Role Selection
+$(document).on('click', '.approve-member-btn', function() {
+    let userId = $(this).data('id');
+    let userName = $(this).data('name');
+
+    Swal.fire({
+        title: 'Approve Member: ' + userName,
+        html: `
+            <form id="approveMemberForm">
+                <div class="form-group text-left">
+                    <label>Select Role(s) <span style="color: red;">*</span>:</label>
+                    <select name="roles[]" class="form-control select2" multiple required>
+                        @foreach(\App\Models\Role::where('name', '!=', 'admin')->get() as $role)
+                        <option value="{{ $role->id }}">{{ $role->display_name ?? ucfirst($role->name) }}</option>
+                        @endforeach
+                    </select>
+                    <small class="form-text text-muted">Please select at least one role for this member.</small>
+                </div>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Approve & Assign Role',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#28a745',
+        preConfirm: () => {
+            const selectedRoles = $('#approveMemberForm select[name="roles[]"]').val();
+            if (!selectedRoles || selectedRoles.length === 0) {
+                Swal.showValidationMessage('Please select at least one role');
+                return false;
+            }
+            return selectedRoles;
+        },
+        didOpen: () => {
+            $('.select2').select2({
+                dropdownParent: $('.swal2-popup'),
+                width: '100%'
+            });
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "{{ route('general.user.approve', ':id') }}".replace(':id', userId),
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    roles: result.value
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success(response.message || 'Member approved successfully');
+                        table.ajax.reload();
+                    } else {
+                        toastr.error(response.message || 'Failed to approve member');
+                    }
+                },
+                error: function(xhr) {
+                    let message = 'Failed to approve member';
+                    if (xhr.responseJSON) {
+                        if (xhr.responseJSON.message) {
+                            message = xhr.responseJSON.message;
+                        } else if (xhr.responseJSON.errors) {
+                            const errors = Object.values(xhr.responseJSON.errors).flat();
+                            message = errors.join(', ');
+                        }
+                    }
+                    toastr.error(message);
+                }
+            });
+        }
+    });
+});
+
+// Assign Role to Active Members
 $(document).on('click', '.edit-role-btn', function() {
     let userId = $(this).data('id');
     let userName = $(this).data('name');
@@ -131,8 +204,8 @@ $(document).on('click', '.edit-role-btn', function() {
                 <div class="form-group text-left">
                     <label>Select Roles:</label>
                     <select name="roles[]" class="form-control select2" multiple required>
-                        @foreach(\App\Models\Role::all() as $role)
-                        <option value="{{ $role->id }}">{{ ucfirst($role->name) }}</option>
+                        @foreach(\App\Models\Role::where('name', '!=', 'admin')->get() as $role)
+                        <option value="{{ $role->id }}">{{ $role->display_name ?? ucfirst($role->name) }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -151,7 +224,8 @@ $(document).on('click', '.edit-role-btn', function() {
         },
         didOpen: () => {
             $('.select2').select2({
-                dropdownParent: $('.swal2-popup')
+                dropdownParent: $('.swal2-popup'),
+                width: '100%'
             });
             $('.select2').val(userRoles).trigger('change');
         }

@@ -23,7 +23,7 @@ class MemberService
         }
 
         $input['user_type'] = User::NORMAL_USER_CODE;
-        $input['status'] = 1;
+        $input['status'] = 0; // Inactive until admin approval
 
         return User::create($input);
     }
@@ -48,17 +48,17 @@ class MemberService
     public function getDashboardData(int $userId)
     {
         $user = User::findOrFail($userId);
-        
+
         // Get current active tour membership
         $currentTourMember = TourMember::where('user_id', $userId)
             ->whereIn('join_status', ['pending', 'approved'])
             ->with('tour')
             ->latest()
             ->first();
-            
+
         // Count total tours joined
         $totalTours = TourMember::where('user_id', $userId)->count();
-        
+
         // Get total payments made
         $totalPaid = Payment::where('user_id', $userId)->sum('amount');
 
@@ -125,7 +125,7 @@ class MemberService
     public function getCurrentTour(int $userId)
     {
         $user = User::findOrFail($userId);
-        
+
         $tourMember = TourMember::where('user_id', $userId)
             ->whereIn('join_status', ['pending', 'approved'])
             ->with(['tour.schedules', 'tour.tourMembers' => function($query) {
@@ -140,9 +140,9 @@ class MemberService
             $totalPaid = Payment::where('user_id', $userId)
                 ->where('tour_id', $tourMember->tour_id)
                 ->sum('amount');
-            
+
             $remaining = $tourMember->tour->per_member_cost - $totalPaid;
-            
+
             $paymentSummary = [
                 'total_cost' => $tourMember->tour->per_member_cost,
                 'total_paid' => $totalPaid,

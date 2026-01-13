@@ -7,13 +7,13 @@
 @section('content')
     <section class="login-page">
         <div class="container">
-            <div class="row">
-                <div class="col-md-8 align-self-center">
-                    @include('auth.auth-slider')
-                </div>
-                <div class="col-md-4">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
                     <div class="register-box mt-4 mt-md-0">
                         <div class="bg-white-custom radius-14 padding-30">
+                            <div class="text-center mb-4">
+                                <img src="{{ $settings->app_logo_url ?? asset('frontend/logo/logo.svg') }}" alt="{{ $settings->app_name ?? 'Logo' }}" style="max-height: 80px; width: auto;">
+                            </div>
                             <div class="login-title">
                                 <p>{{__('messages.login')}}</p>
                                 <h4>{{__('messages.login_title')}}</h4>
@@ -22,13 +22,13 @@
                             <form class="login-form" action="{{ route('admin.login') }}" method="post">
                                 {{ csrf_field() }}
                                 <div class="custom-form-group">
-                                    <label for="name">{{__('messages.mobile_number')}} <span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" name="email"
-                                        placeholder="01X-XXXXXXXX">
+                                    <label for="email">Email or Phone Number <span style="color: red">*</span></label>
+                                    <input type="text" class="form-control" name="email" id="email"
+                                        placeholder="Enter your email or phone number">
                                 </div>
                                 <div class="custom-form-group">
-                                    <label for="name">{{__('messages.password')}} <span style="color: red">*</span></label>
-                                    <input type="password" class="form-control" placeholder="Enter password"
+                                    <label for="password">Password <span style="color: red">*</span></label>
+                                    <input type="password" class="form-control" id="password" placeholder="Enter your password"
                                         autocomplete="off" name="password">
                                 </div>
                                 <div class="">
@@ -39,7 +39,7 @@
                                     </button>
                                     <p class="mt-3 text-gray fs-14">{{__('messages.dont_have_account')}} <a
                                             class="custom-color-secondary fw-500"
-                                            href="{{ route('landing') }}">Go to Registration</a></p>
+                                            href="{{ route('member.show.register') }}">Go to Registration</a></p>
                                     <p class="mt-2">
                                         <a href="{{ route('landing') }}" class="fs-14 text-dark">
                                             <i class="fa-solid fa-arrow-left"></i> Back to Home
@@ -62,24 +62,48 @@
 @push('js')
     <x-generic-validation-error-toastr />
     <script>
-        const loginForm = $('.login-form');
-        loginForm.validate({
-            rules: {
-                email: {
-                    required: true,
-                    //email: true
+        $(document).ready(function() {
+            const loginForm = $('.login-form');
+
+            loginForm.validate({
+                rules: {
+                    email: {
+                        required: true,
+                    },
+                    password: {
+                        required: true,
+                        minlength: 1,
+                    }
                 },
-                password: {
-                    required: true,
+                messages: {
+                    email: {
+                        required: 'Please enter your phone number or email',
+                    },
+                    password: {
+                        required: 'Please enter your password',
+                    }
+                },
+                errorClass: 'text-danger',
+                errorElement: 'div',
+                errorPlacement: function(error, element) {
+                    error.insertAfter(element);
+                },
+                highlight: function(element) {
+                    $(element).addClass('is-invalid').removeClass('is-valid');
+                },
+                unhighlight: function(element) {
+                    $(element).removeClass('is-invalid').addClass('is-valid');
+                },
+                submitHandler: function(form) {
+                    let button = $(loginForm).find('button[type="submit"]');
+                    button.attr("disabled", true).css("cursor", "default");
+                    button.html('<span class="submitting"><i class="fas fa-sync-alt"></i> Loading...</span>');
+                    if ($('.overlay').length) {
+                        $('.overlay').show();
+                    }
+                    form.submit();
                 }
-            },
-            submitHandler: function(htmlForm) {
-                let button = $(loginForm).find('button[type="submit"]');
-                button.attr("disabled", true).css("cursor", "default");
-                button.html('<span class="submitting"><i class="fas fa-sync-alt"></i> Loading...</span>');
-                $('.overlay').show();
-                htmlForm.submit();
-            }
+            });
         });
     </script>
 @endpush

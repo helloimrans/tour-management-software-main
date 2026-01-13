@@ -29,8 +29,11 @@ class UserService
                 return '<img src="' . $imageUrl . '" alt="Profile" width="70" height="70" style="object-fit: cover; border-radius: 5px;">';
             })
             ->editColumn('status', function ($row) use ($authUser) {
-                if (!$authUser->hasPermission('general-user-change-status')) {
-                    return '-';
+                if (!$authUser || !$authUser->hasPermission('general-user-change-status')) {
+                    if ($row->status == 0) {
+                        return '<span class="badge badge-warning">Pending Approval</span>';
+                    }
+                    return $row->status == 1 ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Inactive</span>';
                 }
 
                 $checked = $row->status ? 'checked' : '';
@@ -45,7 +48,17 @@ class UserService
             ->addColumn('action', function ($row) use ($authUser) {
                 $actions = '';
 
-                if ($authUser && $authUser->hasPermission('general-user-update')) {
+                // Show approve button for inactive users (status = 0)
+                if ($row->status == 0 && $authUser && $authUser->hasPermission('general-user-update')) {
+                    $actions .= '<button class="btn bg-gradient-success btn-xs mx-1 approve-member-btn"
+                        data-id="' . $row->id . '"
+                        data-name="' . $row->first_name . ' ' . ($row->last_name ?? '') . '">
+                        <i class="fa-solid fa-check-circle"></i> Approve
+                    </button>';
+                }
+
+                // Show assign role button for active users
+                if ($row->status == 1 && $authUser && $authUser->hasPermission('general-user-update')) {
                     $actions .= '<button class="btn bg-gradient-primary btn-xs mx-1 edit-role-btn"
                         data-id="' . $row->id . '"
                         data-name="' . $row->first_name . ' ' . ($row->last_name ?? '') . '"
