@@ -12,14 +12,7 @@ class TourService
 {
     public function getAll()
     {
-        $query = Tour::with(['createdBy', 'updatedBy']);
-
-        $authUser = AuthHelper::getAuthUser();
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $query->where('created_by', $authUser->id);
-        }
-
-        return $query->latest()->get();
+        return Tour::with(['createdBy', 'updatedBy'])->latest()->get();
     }
 
     public function store(array $input): Tour
@@ -35,26 +28,12 @@ class TourService
 
     public function show(int $id): Tour
     {
-        $query = Tour::query();
-
-        $authUser = AuthHelper::getAuthUser();
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $query->where('created_by', $authUser->id);
-        }
-
-        return $query->findOrFail($id);
+        return Tour::findOrFail($id);
     }
 
     public function update(int $id, array $input): Tour
     {
-        $query = Tour::query();
-
-        $authUser = AuthHelper::getAuthUser();
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $query->where('created_by', $authUser->id);
-        }
-
-        $tour = $query->findOrFail($id);
+        $tour = Tour::findOrFail($id);
 
         if (isset($input['image'])) {
             if ($tour->image) {
@@ -72,14 +51,7 @@ class TourService
 
     public function delete(int $id): bool
     {
-        $query = Tour::query();
-
-        $authUser = AuthHelper::getAuthUser();
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $query->where('created_by', $authUser->id);
-        }
-
-        $tour = $query->findOrFail($id);
+        $tour = Tour::findOrFail($id);
 
         if ($tour->image) {
             deleteFile($tour->image);
@@ -96,15 +68,22 @@ class TourService
     {
         $authUser = AuthHelper::getAuthUser();
 
-        $data = Tour::with(['createdBy', 'updatedBy']);
-
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $data->where('created_by', $authUser->id);
-        }
-
-        $data->latest();
+        $data = Tour::with(['createdBy', 'updatedBy'])->latest();
 
         return DataTables::of($data)
+            ->addColumn('destination', function ($row) {
+                return $row->destination ?? '-';
+            })
+            ->addColumn('dates', function ($row) {
+                return $row->start_date->format('d M Y') . ' - ' . $row->end_date->format('d M Y');
+            })
+            ->addColumn('cost', function ($row) {
+                return '৳' . number_format($row->per_member_cost, 2);
+            })
+            ->addColumn('members', function ($row) {
+                $current = $row->tourMembers()->where('join_status', 'approved')->count();
+                return $current . ' / ' . $row->max_members;
+            })
             ->addColumn('created_by_name', function ($row) {
                 return $row->createdBy->first_name . ' ' . ($row->createdBy->last_name ?? '') ?? '-';
             })
@@ -117,19 +96,16 @@ class TourService
                     : asset('defaults/noimage/no_img.jpg');
                 return '<img src="' . $imageUrl . '" alt="Tour" width="70" height="70" style="object-fit: cover; border-radius: 5px;">';
             })
-            ->editColumn('status', function ($row) use ($authUser) {
-                if (!$authUser->hasPermission('tour-change-status')) {
-                    return '-';
-                }
-
-                $checked = $row->status ? 'checked' : '';
-                $switchId = 'customSwitch' . $row->id;
-
-                return '<div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input change-status-checkbox"
-                           id="' . $switchId . '" data-id="' . $row->id . '" ' . $checked . '>
-                    <label class="custom-control-label" for="' . $switchId . '"></label>
-                </div>';
+            ->editColumn('status', function ($row) {
+                $statusClass = [
+                    'upcoming' => 'badge-info',
+                    'ongoing' => 'badge-success',
+                    'completed' => 'badge-secondary',
+                    'closed' => 'badge-danger',
+                ];
+                
+                $class = $statusClass[$row->status] ?? 'badge-secondary';
+                return '<span class="badge ' . $class . '">' . ucfirst($row->status) . '</span>';
             })
             ->addColumn('action', function ($row) use ($authUser) {
                 $actions = '';
@@ -157,7 +133,7 @@ class TourService
 
                 return $actions ?: '-';
             })
-            ->rawColumns(['action', 'status', 'image'])
+            ->rawColumns(['action', 'status', 'image', 'dates', 'cost', 'members'])
             ->make(true);
     }
 }

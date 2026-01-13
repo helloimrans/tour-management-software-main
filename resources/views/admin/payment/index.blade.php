@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('travel.agency.dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">Payments</li>
                     </ol>
                 </div>
@@ -75,12 +75,19 @@
                         data: 'member_name'
                     },
                     {
+                        title: 'Phone',
+                        data: 'member_phone'
+                    },
+                    {
                         title: 'Amount',
-                        data: 'amount'
+                        data: 'amount',
+                        orderable: false,
                     },
                     {
                         title: 'Payment Method',
-                        data: 'payment_method'
+                        data: 'payment_method',
+                        orderable: false,
+                        searchable: false,
                     },
                     {
                         title: 'Transaction Number',

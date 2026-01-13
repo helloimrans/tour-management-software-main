@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ExpenseCategory;
 use App\Services\ExpenseService;
 use App\Services\TourService;
 use Illuminate\Http\Request;
@@ -33,7 +34,19 @@ class ExpenseController extends Controller
             abort(403, 'Unauthorized action.');
         }
         $data['tours'] = $this->tourService->getAll();
+        $data['categories'] = ExpenseCategory::all();
         return view('admin.expense.create', $data);
+    }
+
+    public function edit(string $id)
+    {
+        if (!auth()->user()->hasPermission('expense-update')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $data['expense'] = $this->expenseService->show($id);
+        $data['tours'] = $this->tourService->getAll();
+        $data['categories'] = ExpenseCategory::all();
+        return view('admin.expense.edit', $data);
     }
 
     public function store(Request $request)
@@ -44,7 +57,7 @@ class ExpenseController extends Controller
         try {
             $validatedData = $request->validate([
                 'tour_id' => ['required', 'integer', 'exists:tours,id'],
-                'category' => ['required', 'string', 'max:191'],
+                'expense_category_id' => ['required', 'integer', 'exists:expense_categories,id'],
                 'description' => ['nullable', 'string'],
                 'amount' => ['required', 'numeric', 'min:0'],
                 'expense_date' => ['required', 'date'],
@@ -60,6 +73,33 @@ class ExpenseController extends Controller
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to add expense. Please try again.'])->withInput();
+        }
+    }
+
+    public function update(Request $request, string $id)
+    {
+        if (!auth()->user()->hasPermission('expense-update')) {
+            abort(403, 'Unauthorized action.');
+        }
+        try {
+            $validatedData = $request->validate([
+                'tour_id' => ['required', 'integer', 'exists:tours,id'],
+                'expense_category_id' => ['required', 'integer', 'exists:expense_categories,id'],
+                'description' => ['nullable', 'string'],
+                'amount' => ['required', 'numeric', 'min:0'],
+                'expense_date' => ['required', 'date'],
+            ]);
+
+            $this->expenseService->update($id, $validatedData);
+
+            return redirect()->route('expense.index')->with([
+                'message' => 'Expense updated successfully.',
+                'alert-type' => 'success',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to update expense. Please try again.'])->withInput();
         }
     }
 

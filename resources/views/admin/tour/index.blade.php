@@ -73,28 +73,33 @@
                         searchable: false,
                     },
                     {
-                        title: 'Name',
+                        title: 'Tour Name',
                         data: 'name'
                     },
                     {
-                        title: 'Description',
-                        data: 'description'
+                        title: 'Destination',
+                        data: 'destination'
+                    },
+                    {
+                        title: 'Dates',
+                        data: 'dates',
+                        orderable: false,
+                    },
+                    {
+                        title: 'Cost/Member',
+                        data: 'cost',
+                        orderable: false,
+                    },
+                    {
+                        title: 'Members',
+                        data: 'members',
+                        orderable: false,
                     },
                     {
                         title: 'Status',
                         data: 'status',
                         orderable: false,
                         searchable: false,
-                    },
-                    {
-                        title: 'Created By',
-                        data: 'created_by_name',
-                        orderable: false,
-                    },
-                    {
-                        title: 'Updated By',
-                        data: 'updated_by_name',
-                        orderable: false,
                     },
                     {
                         title: "Action",
@@ -107,6 +112,5 @@
         });
     </script>
 
-    @include('layouts.admin.includes.change-status', ['table' => 'tours', 'column' => 'status'])
 @endpush
 

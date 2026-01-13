@@ -11,15 +11,16 @@ class ExpenseService
 {
     public function getAll()
     {
-        $query = Expense::with(['tour', 'createdBy', 'updatedBy']);
+        return Expense::with(['tour', 'category', 'createdBy', 'updatedBy'])->latest()->get();
+    }
 
-        $authUser = AuthHelper::getAuthUser();
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $tourIds = \App\Models\Tour::where('created_by', $authUser->id)->pluck('id');
-            $query->whereIn('tour_id', $tourIds);
-        }
+    public function update(int $id, array $input): Expense
+    {
+        $expense = Expense::findOrFail($id);
+        $input['updated_by'] = Auth::id();
+        $expense->update($input);
 
-        return $query->latest()->get();
+        return $expense->fresh();
     }
 
     public function store(array $input): Expense
@@ -30,15 +31,7 @@ class ExpenseService
 
     public function show(int $id): Expense
     {
-        $query = Expense::with(['tour']);
-
-        $authUser = AuthHelper::getAuthUser();
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $tourIds = \App\Models\Tour::where('created_by', $authUser->id)->pluck('id');
-            $query->whereIn('tour_id', $tourIds);
-        }
-
-        return $query->findOrFail($id);
+        return Expense::with(['tour', 'category'])->findOrFail($id);
     }
 
     public function delete(int $id): bool
@@ -54,24 +47,30 @@ class ExpenseService
     {
         $authUser = AuthHelper::getAuthUser();
 
-        $data = Expense::with(['tour', 'createdBy']);
-
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $tourIds = \App\Models\Tour::where('created_by', $authUser->id)->pluck('id');
-            $data->whereIn('tour_id', $tourIds);
-        }
-
-        $data->latest();
+        $data = Expense::with(['tour', 'category', 'createdBy'])->latest();
 
         return DataTables::of($data)
             ->addColumn('tour_name', function ($row) {
                 return $row->tour->name ?? '-';
             })
+            ->addColumn('category_name', function ($row) {
+                return $row->category->name ?? '-';
+            })
             ->editColumn('amount', function ($row) {
-                return number_format($row->amount, 2);
+                return '৳' . number_format($row->amount, 2);
+            })
+            ->editColumn('expense_date', function ($row) {
+                return $row->expense_date->format('d M Y');
             })
             ->addColumn('action', function ($row) use ($authUser) {
                 $actions = '';
+
+                if ($authUser && $authUser->hasPermission('expense-update')) {
+                    $editUrl = route('expense.edit', $row->id);
+                    $actions .= '<a href="' . $editUrl . '" class="btn bg-gradient-primary btn-xs mx-1">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </a>';
+                }
 
                 if ($authUser && $authUser->hasPermission('expense-delete')) {
                     $deleteUrl = route('expense.destroy', $row->id);

@@ -1,5 +1,5 @@
 @extends('layouts.admin.master')
-@section('title', 'Add Payment')
+@section('title', 'Edit Expense')
 
 @push('css')
 @endpush
@@ -9,13 +9,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Add Payment</h1>
+                    <h1 class="m-0">Edit Expense</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('payment.index') }}">Payments</a></li>
-                        <li class="breadcrumb-item active">Add</li>
+                        <li class="breadcrumb-item"><a href="{{ route('expense.index') }}">Expenses</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
                     </ol>
                 </div>
             </div>
@@ -29,14 +29,15 @@
                     <div class="card dashboard-custom-card">
                         <div class="card-body">
                             <div class="custom-card-header d-flex justify-content-between">
-                                <h4>Add Payment</h4>
-                                <a href="{{ route('payment.index') }}" class="btn btn-primary">
+                                <h4>Edit Expense</h4>
+                                <a href="{{ route('expense.index') }}" class="btn btn-primary">
                                     <i class="fa-solid fa-arrow-left"></i> Back
                                 </a>
                             </div>
 
-                            <form id="paymentForm" action="{{ route('payment.store') }}" method="post">
+                            <form id="expenseForm" action="{{ route('expense.update', $expense->id) }}" method="post">
                                 @csrf
+                                @method('PUT')
 
                                 <div class="row">
                                     <div class="col-md-6">
@@ -45,7 +46,7 @@
                                             <select name="tour_id" class="form-control" id="tour_id" required>
                                                 <option value="">Select Tour</option>
                                                 @foreach($tours as $tour)
-                                                    <option value="{{ $tour->id }}" {{ old('tour_id') == $tour->id ? 'selected' : '' }}>
+                                                    <option value="{{ $tour->id }}" {{ old('tour_id', $expense->tour_id) == $tour->id ? 'selected' : '' }}>
                                                         {{ $tour->name }}
                                                     </option>
                                                 @endforeach
@@ -58,16 +59,16 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="user_id" class="form-label">Member <span class="text-danger">*</span></label>
-                                            <select name="user_id" class="form-control" id="user_id" required>
-                                                <option value="">Select Member</option>
-                                                @foreach($members as $member)
-                                                    <option value="{{ $member->id }}" {{ old('user_id') == $member->id ? 'selected' : '' }}>
-                                                        {{ $member->first_name }} {{ $member->last_name }} ({{ $member->phone }})
+                                            <label for="expense_category_id" class="form-label">Category <span class="text-danger">*</span></label>
+                                            <select name="expense_category_id" class="form-control" id="expense_category_id" required>
+                                                <option value="">Select Category</option>
+                                                @foreach($categories as $category)
+                                                    <option value="{{ $category->id }}" {{ old('expense_category_id', $expense->expense_category_id) == $category->id ? 'selected' : '' }}>
+                                                        {{ $category->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            @error('user_id')
+                                            @error('expense_category_id')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -77,7 +78,7 @@
                                         <div class="form-group">
                                             <label for="amount" class="form-label">Amount <span class="text-danger">*</span></label>
                                             <input type="number" name="amount" class="form-control" id="amount" step="0.01"
-                                                   placeholder="Enter Amount" value="{{ old('amount') }}" required>
+                                                   placeholder="Enter Amount" value="{{ old('amount', $expense->amount) }}" required>
                                             @error('amount')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -86,35 +87,10 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="payment_method" class="form-label">Payment Method <span class="text-danger">*</span></label>
-                                            <select name="payment_method" class="form-control" id="payment_method" required>
-                                                <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>Cash</option>
-                                                <option value="bank" {{ old('payment_method') == 'bank' ? 'selected' : '' }}>Bank</option>
-                                                <option value="mobile" {{ old('payment_method') == 'mobile' ? 'selected' : '' }}>Mobile Banking</option>
-                                            </select>
-                                            @error('payment_method')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="transaction_number" class="form-label">Transaction Number</label>
-                                            <input type="text" name="transaction_number" class="form-control" id="transaction_number"
-                                                   placeholder="Enter Transaction Number" value="{{ old('transaction_number') }}">
-                                            @error('transaction_number')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="payment_date" class="form-label">Date <span class="text-danger">*</span></label>
-                                            <input type="date" name="payment_date" class="form-control" id="payment_date"
-                                                   value="{{ old('payment_date', date('Y-m-d')) }}" required>
-                                            @error('payment_date')
+                                            <label for="expense_date" class="form-label">Date <span class="text-danger">*</span></label>
+                                            <input type="date" name="expense_date" class="form-control" id="expense_date"
+                                                   value="{{ old('expense_date', $expense->expense_date?->format('Y-m-d')) }}" required>
+                                            @error('expense_date')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -122,10 +98,10 @@
 
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="notes" class="form-label">Notes</label>
-                                            <textarea name="notes" class="form-control" id="notes" rows="3"
-                                                      placeholder="Enter Notes">{{ old('notes') }}</textarea>
-                                            @error('notes')
+                                            <label for="description" class="form-label">Description</label>
+                                            <textarea name="description" class="form-control" id="description" rows="3"
+                                                      placeholder="Enter Description">{{ old('description', $expense->description) }}</textarea>
+                                            @error('description')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -135,7 +111,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="fa-solid fa-floppy-disk"></i> Submit
+                                            <i class="fa-solid fa-floppy-disk"></i> Update
                                         </button>
                                     </div>
                                 </div>

@@ -4,26 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Expense extends Model
+class TourMember extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'tour_id',
-        'expense_category_id',
-        'description',
-        'amount',
-        'expense_date',
+        'user_id',
+        'room_no',
+        'seat_no',
+        'joined_at',
+        'join_status',
         'created_by',
         'updated_by',
-        'deleted_by',
     ];
 
     protected $casts = [
-        'amount' => 'decimal:2',
-        'expense_date' => 'date',
+        'joined_at' => 'datetime',
     ];
 
     public function tour()
@@ -31,9 +29,9 @@ class Expense extends Model
         return $this->belongsTo(Tour::class);
     }
 
-    public function category()
+    public function user()
     {
-        return $this->belongsTo(ExpenseCategory::class, 'expense_category_id');
+        return $this->belongsTo(User::class);
     }
 
     public function createdBy()

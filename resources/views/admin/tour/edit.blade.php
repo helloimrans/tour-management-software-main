@@ -54,6 +54,87 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label for="destination" class="form-label">Destination <span class="text-danger">*</span></label>
+                                            <input type="text" name="destination" class="form-control" id="destination"
+                                                   placeholder="Enter Destination" value="{{ old('destination', $data->destination) }}">
+                                            @error('destination')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="start_date" class="form-label">Start Date <span class="text-danger">*</span></label>
+                                            <input type="date" name="start_date" class="form-control" id="start_date"
+                                                   value="{{ old('start_date', $data->start_date?->format('Y-m-d')) }}">
+                                            @error('start_date')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="end_date" class="form-label">End Date <span class="text-danger">*</span></label>
+                                            <input type="date" name="end_date" class="form-control" id="end_date"
+                                                   value="{{ old('end_date', $data->end_date?->format('Y-m-d')) }}">
+                                            @error('end_date')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="total_cost" class="form-label">Total Cost (৳)</label>
+                                            <input type="number" name="total_cost" class="form-control" id="total_cost"
+                                                   placeholder="Enter Total Cost" value="{{ old('total_cost', $data->total_cost) }}" step="0.01" min="0">
+                                            @error('total_cost')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="per_member_cost" class="form-label">Cost Per Member (৳)</label>
+                                            <input type="number" name="per_member_cost" class="form-control" id="per_member_cost"
+                                                   placeholder="Enter Cost Per Member" value="{{ old('per_member_cost', $data->per_member_cost) }}" step="0.01" min="0">
+                                            @error('per_member_cost')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="max_members" class="form-label">Max Members <span class="text-danger">*</span></label>
+                                            <input type="number" name="max_members" class="form-control" id="max_members"
+                                                   placeholder="Enter Max Members" value="{{ old('max_members', $data->max_members) }}" min="1">
+                                            @error('max_members')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                                            <select name="status" class="form-control" id="status">
+                                                <option value="upcoming" {{ old('status', $data->status) == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
+                                                <option value="ongoing" {{ old('status', $data->status) == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
+                                                <option value="completed" {{ old('status', $data->status) == 'completed' ? 'selected' : '' }}>Completed</option>
+                                                <option value="closed" {{ old('status', $data->status) == 'closed' ? 'selected' : '' }}>Closed</option>
+                                            </select>
+                                            @error('status')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label for="image" class="form-label">Tour Image</label>
                                             <input type="file" name="image" class="form-control" id="image"
                                                    accept="image/*">
@@ -111,6 +192,22 @@
 
             const rules = {
                 name: {
+                    required: true,
+                },
+                destination: {
+                    required: true,
+                },
+                start_date: {
+                    required: true,
+                },
+                end_date: {
+                    required: true,
+                },
+                max_members: {
+                    required: true,
+                    min: 1,
+                },
+                status: {
                     required: true,
                 },
                 image: {

@@ -11,9 +11,15 @@ return new class extends Migration
         Schema::create('tours', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('destination');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->text('description')->nullable();
+            $table->decimal('total_cost', 12, 2)->default(0);
+            $table->decimal('per_member_cost', 12, 2)->default(0);
+            $table->integer('max_members')->default(0);
             $table->string('image')->nullable();
-            $table->unsignedTinyInteger('status')->default(1);
+            $table->enum('status', ['upcoming', 'ongoing', 'completed', 'closed'])->default('upcoming');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();

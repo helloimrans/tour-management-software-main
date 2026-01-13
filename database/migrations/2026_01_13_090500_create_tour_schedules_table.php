@@ -6,28 +6,30 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('expenses', function (Blueprint $table) {
+        Schema::create('tour_schedules', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tour_id');
-            $table->unsignedBigInteger('expense_category_id');
-            $table->text('description')->nullable();
-            $table->decimal('amount', 12, 2);
-            $table->date('expense_date');
+            $table->date('schedule_date');
+            $table->string('title');
+            $table->text('details')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
-            $table->unsignedBigInteger('deleted_by')->nullable();
             $table->timestamps();
-            $table->softDeletes();
-
+            
             $table->foreign('tour_id')->references('id')->on('tours')->onDelete('cascade');
-            $table->foreign('expense_category_id')->references('id')->on('expense_categories')->onDelete('restrict');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('expenses');
+        Schema::dropIfExists('tour_schedules');
     }
 };

@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('travel.agency.dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item active">Expenses</li>
                     </ol>
                 </div>
@@ -72,7 +72,7 @@
                     },
                     {
                         title: 'Category',
-                        data: 'category'
+                        data: 'category_name'
                     },
                     {
                         title: 'Description',

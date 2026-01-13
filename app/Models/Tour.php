@@ -13,12 +13,25 @@ class Tour extends Model
 
     protected $fillable = [
         'name',
+        'destination',
+        'start_date',
+        'end_date',
         'description',
+        'total_cost',
+        'per_member_cost',
+        'max_members',
         'image',
         'status',
         'created_by',
         'updated_by',
         'deleted_by',
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'total_cost' => 'decimal:2',
+        'per_member_cost' => 'decimal:2',
     ];
 
     protected $appends = ['image_url'];
@@ -47,5 +60,25 @@ class Tour extends Model
     public function users()
     {
         return $this->hasMany(User::class, 'tour_id', 'id');
+    }
+
+    public function tourMembers()
+    {
+        return $this->hasMany(TourMember::class);
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(TourSchedule::class);
     }
 }

@@ -11,15 +11,16 @@ class PaymentService
 {
     public function getAll()
     {
-        $query = Payment::with(['tour', 'user', 'createdBy', 'updatedBy']);
+        return Payment::with(['tour', 'user', 'createdBy', 'updatedBy'])->latest()->get();
+    }
 
-        $authUser = AuthHelper::getAuthUser();
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $tourIds = \App\Models\Tour::where('created_by', $authUser->id)->pluck('id');
-            $query->whereIn('tour_id', $tourIds);
-        }
+    public function update(int $id, array $input): Payment
+    {
+        $payment = Payment::findOrFail($id);
+        $input['updated_by'] = Auth::id();
+        $payment->update($input);
 
-        return $query->latest()->get();
+        return $payment->fresh();
     }
 
     public function store(array $input): Payment
@@ -30,15 +31,7 @@ class PaymentService
 
     public function show(int $id): Payment
     {
-        $query = Payment::with(['tour', 'user']);
-
-        $authUser = AuthHelper::getAuthUser();
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $tourIds = \App\Models\Tour::where('created_by', $authUser->id)->pluck('id');
-            $query->whereIn('tour_id', $tourIds);
-        }
-
-        return $query->findOrFail($id);
+        return Payment::with(['tour', 'user'])->findOrFail($id);
     }
 
     public function delete(int $id): bool
@@ -54,14 +47,7 @@ class PaymentService
     {
         $authUser = AuthHelper::getAuthUser();
 
-        $data = Payment::with(['tour', 'user', 'createdBy']);
-
-        if ($authUser && $authUser->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE) {
-            $tourIds = \App\Models\Tour::where('created_by', $authUser->id)->pluck('id');
-            $data->whereIn('tour_id', $tourIds);
-        }
-
-        $data->latest();
+        $data = Payment::with(['tour', 'user', 'createdBy'])->latest();
 
         return DataTables::of($data)
             ->addColumn('tour_name', function ($row) {
@@ -70,11 +56,34 @@ class PaymentService
             ->addColumn('member_name', function ($row) {
                 return ($row->user->first_name ?? '') . ' ' . ($row->user->last_name ?? '');
             })
+            ->addColumn('member_phone', function ($row) {
+                return $row->user->phone ?? '-';
+            })
             ->editColumn('amount', function ($row) {
-                return number_format($row->amount, 2);
+                return '৳' . number_format($row->amount, 2);
+            })
+            ->editColumn('payment_date', function ($row) {
+                return $row->payment_date->format('d M Y');
+            })
+            ->editColumn('payment_method', function ($row) {
+                $badges = [
+                    'cash' => 'badge-success',
+                    'bank' => 'badge-info',
+                    'bkash' => 'badge-warning',
+                    'nagad' => 'badge-primary',
+                ];
+                $class = $badges[$row->payment_method] ?? 'badge-secondary';
+                return '<span class="badge ' . $class . '">' . ucfirst($row->payment_method) . '</span>';
             })
             ->addColumn('action', function ($row) use ($authUser) {
                 $actions = '';
+
+                if ($authUser && $authUser->hasPermission('payment-update')) {
+                    $editUrl = route('payment.edit', $row->id);
+                    $actions .= '<a href="' . $editUrl . '" class="btn bg-gradient-primary btn-xs mx-1">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </a>';
+                }
 
                 if ($authUser && $authUser->hasPermission('payment-delete')) {
                     $deleteUrl = route('payment.destroy', $row->id);
@@ -92,7 +101,7 @@ class PaymentService
 
                 return $actions ?: '-';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'payment_method'])
             ->make(true);
     }
 }

@@ -40,7 +40,14 @@ class TourController extends Controller
         try {
             $validatedData = $request->validate([
                 'name' => ['required', 'string', 'max:191'],
+                'destination' => ['required', 'string', 'max:191'],
+                'start_date' => ['required', 'date'],
+                'end_date' => ['required', 'date', 'after_or_equal:start_date'],
                 'description' => ['nullable', 'string'],
+                'total_cost' => ['nullable', 'numeric', 'min:0'],
+                'per_member_cost' => ['nullable', 'numeric', 'min:0'],
+                'max_members' => ['required', 'integer', 'min:1'],
+                'status' => ['required', 'in:upcoming,ongoing,completed,closed'],
                 'image' => ['nullable', 'mimes:jpg,jpeg,png,webp,svg,gif', 'max:5120'],
             ]);
 
@@ -85,7 +92,14 @@ class TourController extends Controller
         try {
             $validatedData = $request->validate([
                 'name' => ['required', 'string', 'max:191'],
+                'destination' => ['required', 'string', 'max:191'],
+                'start_date' => ['required', 'date'],
+                'end_date' => ['required', 'date', 'after_or_equal:start_date'],
                 'description' => ['nullable', 'string'],
+                'total_cost' => ['nullable', 'numeric', 'min:0'],
+                'per_member_cost' => ['nullable', 'numeric', 'min:0'],
+                'max_members' => ['required', 'integer', 'min:1'],
+                'status' => ['required', 'in:upcoming,ongoing,completed,closed'],
                 'image' => ['nullable', 'mimes:jpg,jpeg,png,webp,svg,gif', 'max:5120'],
             ]);
 

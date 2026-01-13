@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\StatusController;
 use App\Http\Controllers\Admin\TourController;
-use App\Http\Controllers\Admin\TravelAgencyController;
+use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\MemberManagementController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
@@ -14,7 +16,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\User\ValidationController;
-use App\Http\Controllers\TravelAgencyController as PublicTravelAgencyController;
+use App\Http\Controllers\MemberController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -38,11 +40,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/login', [LoginController::class, 'login'])->name('admin.login');
     Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
-    Route::get('/travel-agency/register', [PublicTravelAgencyController::class, 'showRegistrationForm'])->name('travel.agency.show.register');
-    Route::post('/travel-agency/register', [PublicTravelAgencyController::class, 'register'])->name('travel.agency.register');
-
-    Route::get('/member/register', [\App\Http\Controllers\MemberController::class, 'showRegistrationForm'])->name('member.show.register');
-    Route::post('/member/register', [\App\Http\Controllers\MemberController::class, 'register'])->name('member.register');
+    Route::get('/member/register', [MemberController::class, 'showRegistrationForm'])->name('member.show.register');
+    Route::post('/member/register', [MemberController::class, 'register'])->name('member.register');
 });
 
 Route::group(['prefix' => 'dashboard', 'as' => 'admin.', 'middleware' => ['auth']], function () {
@@ -88,20 +87,19 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
     Route::resource('admin-users', AdminUserController::class)->names('admin.user');
 
     Route::resource('tours', TourController::class)->names('tour');
-    Route::resource('travel-agencies', TravelAgencyController::class)->names('travel.agency');
+    
+    // Member Management
+    Route::get('/member-management', [MemberManagementController::class, 'index'])->name('member-management.index');
+    Route::post('/member-management/add-to-tour', [MemberManagementController::class, 'addToTour'])->name('member-management.add-to-tour');
+    Route::put('/member-management/{id}', [MemberManagementController::class, 'update'])->name('member-management.update');
+    Route::delete('/member-management/{id}', [MemberManagementController::class, 'destroy'])->name('member-management.destroy');
+    
+    // Expense Management
+    Route::resource('expenses', ExpenseController::class)->names('expense');
+    
+    // Payment Management
+    Route::resource('payments', PaymentController::class)->names('payment');
 
-});
-
-Route::group(['prefix' => 'travel-agency', 'as' => 'travel.agency.', 'middleware' => ['auth']], function () {
-    Route::get('/dashboard', [PublicTravelAgencyController::class, 'dashboard'])->name('dashboard');
-
-    Route::get('/members', [\App\Http\Controllers\Admin\MemberManagementController::class, 'index'])->name('members');
-    Route::resource('expenses', \App\Http\Controllers\Admin\ExpenseController::class)->names('expense');
-    Route::resource('payments', \App\Http\Controllers\Admin\PaymentController::class)->names('payment');
-});
-
-Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
-    Route::get('/member-management', [\App\Http\Controllers\Admin\MemberManagementController::class, 'index'])->name('member-management.index');
 });
 
 Route::group(['prefix' => 'member', 'as' => 'member.', 'middleware' => ['auth']], function () {

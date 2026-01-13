@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('travel.agency.dashboard') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
                         <li class="breadcrumb-item"><a href="{{ route('expense.index') }}">Expenses</a></li>
                         <li class="breadcrumb-item active">Add</li>
                     </ol>
@@ -58,14 +58,16 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
-                                            <select name="category" class="form-control" id="category" required>
-                                                <option value="room" {{ old('category') == 'room' ? 'selected' : '' }}>Room</option>
-                                                <option value="transport" {{ old('category') == 'transport' ? 'selected' : '' }}>Transport</option>
-                                                <option value="food" {{ old('category') == 'food' ? 'selected' : '' }}>Food</option>
-                                                <option value="other" {{ old('category') == 'other' ? 'selected' : '' }}>Other</option>
+                                            <label for="expense_category_id" class="form-label">Category <span class="text-danger">*</span></label>
+                                            <select name="expense_category_id" class="form-control" id="expense_category_id" required>
+                                                <option value="">Select Category</option>
+                                                @foreach($categories as $category)
+                                                    <option value="{{ $category->id }}" {{ old('expense_category_id') == $category->id ? 'selected' : '' }}>
+                                                        {{ $category->name }}
+                                                    </option>
+                                                @endforeach
                                             </select>
-                                            @error('category')
+                                            @error('expense_category_id')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
