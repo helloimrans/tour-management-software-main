@@ -5,21 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Services\AdminUserService;
-use App\Services\TourService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
 class AdminUserController extends Controller
 {
     protected AdminUserService $adminUserService;
-    protected TourService $tourService;
 
     public function __construct(
-        AdminUserService $adminUserService,
-        TourService $tourService
+        AdminUserService $adminUserService
     ) {
         $this->adminUserService = $adminUserService;
-        $this->tourService = $tourService;
     }
 
     public function index()
@@ -34,7 +30,6 @@ class AdminUserController extends Controller
     public function create()
     {
         $data = [
-            'tours' => $this->tourService->getAll(),
             'roles' => Role::all(),
         ];
 
@@ -70,7 +65,6 @@ class AdminUserController extends Controller
     {
         $data = [
             'data' => $this->adminUserService->show($id),
-            'tours' => $this->tourService->getAll(),
             'roles' => Role::all(),
         ];
 

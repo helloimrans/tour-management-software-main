@@ -41,26 +41,6 @@
                                 @method('PUT')
 
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="tour_id" class="form-label">Tour</label>
-                                            <select name="tour_id" class="form-control" id="tour_id">
-                                                <option value="">All Tours</option>
-                                                @foreach($tours as $tour)
-                                                    <option value="{{ $tour->id }}"
-                                                            {{ (old('tour_id', $data->tour_id) == $tour->id) ? 'selected' : '' }}>
-                                                        {{ $tour->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('tour_id')
-                                                <div class="text-danger">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="first_name" class="form-label">First Name <span class="text-danger">*</span></label>

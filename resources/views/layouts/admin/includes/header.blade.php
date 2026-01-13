@@ -6,11 +6,7 @@
         @auth
         <li class="nav-item d-none d-sm-block">
             <a class="nav-link" href="#">
-                @if(auth()->user()->user_type == \App\Models\User::TRAVEL_AGENCY_USER_CODE)
-                    {{auth()->user()->tour ? auth()->user()->tour->name : 'All Tours'}}
-                @else
-                    All Tours
-                @endif
+                All Tours
             </a>
         </li>
         @endauth

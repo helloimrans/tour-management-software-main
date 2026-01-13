@@ -67,10 +67,6 @@
                         orderable: false,
                     },
                     {
-                        title: 'Tour',
-                        data: 'tour'
-                    },
-                    {
                         title: 'First Name',
                         data: 'first_name'
                     },

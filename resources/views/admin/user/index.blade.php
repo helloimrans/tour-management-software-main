@@ -82,19 +82,19 @@
                     },
                     {
                         title: 'Profile Pic',
-                        data: 'profile_pic'
+                        data: 'profile_pic',
+                        orderable: false,
+                        searchable: false,
                     },
                     {
-                        title: 'Own coupon Code',
-                        data: 'own_coupon_code'
-                    },
-                    {
-                        title: 'Used Coupon Code',
-                        data: 'used_coupon_code'
+                        title: 'Address',
+                        data: 'address'
                     },
                     {
                         title: 'Status',
-                        data: 'status'
+                        data: 'status',
+                        orderable: false,
+                        searchable: false,
                     },
                     {
                         title: 'Created By',
@@ -123,7 +123,7 @@ $(document).on('click', '.edit-role-btn', function() {
     let userId = $(this).data('id');
     let userName = $(this).data('name');
     let userRoles = $(this).data('roles');
-    
+
     Swal.fire({
         title: 'Assign Role to ' + userName,
         html: `
@@ -158,18 +158,23 @@ $(document).on('click', '.edit-role-btn', function() {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: '/dashboard/general-users/' + userId + '/assign-role',
+                url: "{{ route('general.user.assign-role', ':id') }}".replace(':id', userId),
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
                     roles: result.value
                 },
                 success: function(response) {
-                    toastr.success(response.message || 'Role assigned successfully');
-                    $('.datatable').DataTable().ajax.reload();
+                    if (response.success) {
+                        toastr.success(response.message || 'Role assigned successfully');
+                        table.ajax.reload();
+                    } else {
+                        toastr.error(response.message || 'Failed to assign role');
+                    }
                 },
                 error: function(xhr) {
-                    toastr.error('Failed to assign role');
+                    const message = xhr.responseJSON?.message || 'Failed to assign role';
+                    toastr.error(message);
                 }
             });
         }
