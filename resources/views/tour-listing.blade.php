@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Tours - Tour Management</title>
+    <title>All Tours - {{ $settings->app_name ?? 'Tour Management' }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -12,19 +12,19 @@
             --secondary-color: #2ecc71;
             --dark-color: #2c3e50;
         }
-        
+
         .navbar-custom {
             background: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
+
         .page-header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 80px 0 40px;
             margin-top: 76px;
         }
-        
+
         .tour-card {
             border: none;
             border-radius: 15px;
@@ -34,26 +34,26 @@
             margin-bottom: 30px;
             height: 100%;
         }
-        
+
         .tour-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
-        
+
         .tour-card img {
             height: 250px;
             object-fit: cover;
         }
-        
+
         .tour-card .card-body {
             padding: 25px;
         }
-        
+
         .tour-card .badge {
             font-size: 0.85rem;
             padding: 8px 15px;
         }
-        
+
         .filter-section {
             background: white;
             padding: 25px;
@@ -61,7 +61,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 30px;
         }
-        
+
         .footer {
             background: var(--dark-color);
             color: white;
@@ -75,7 +75,7 @@
     <nav class="navbar navbar-expand-lg navbar-light navbar-custom fixed-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ route('landing') }}">
-                <i class="fas fa-plane-departure text-primary"></i> Tour Management
+                <i class="fas fa-plane-departure text-primary"></i> {{ $settings->app_name ?? 'Tour Management' }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -116,8 +116,8 @@
                     <div class="row g-3 align-items-end">
                         <div class="col-md-4">
                             <label class="form-label fw-bold">Search Tours</label>
-                            <input type="text" name="search" class="form-control" 
-                                   placeholder="Search by name, destination..." 
+                            <input type="text" name="search" class="form-control"
+                                   placeholder="Search by name, destination..."
                                    value="{{ $search ?? '' }}">
                         </div>
                         <div class="col-md-3">
@@ -170,22 +170,22 @@
                                         <span class="badge bg-warning">Almost Full</span>
                                     @endif
                                 </div>
-                                
+
                                 <h5 class="card-title">{{ $tour->name }}</h5>
-                                
+
                                 <p class="text-muted mb-2">
                                     <i class="fas fa-map-marker-alt text-danger"></i> {{ $tour->destination }}
                                 </p>
-                                
+
                                 <p class="text-muted mb-2">
-                                    <i class="fas fa-calendar"></i> 
+                                    <i class="fas fa-calendar"></i>
                                     {{ $tour->start_date->format('d M Y') }} - {{ $tour->end_date->format('d M Y') }}
                                 </p>
-                                
+
                                 @if($tour->description)
                                 <p class="text-muted small">{{ Str::limit($tour->description, 100) }}</p>
                                 @endif
-                                
+
                                 <div class="mt-auto">
                                     <hr>
                                     <div class="d-flex justify-content-between align-items-center">
@@ -196,12 +196,12 @@
                                         <div class="text-end">
                                             <small class="text-muted d-block">Availability</small>
                                             <span class="fw-bold">
-                                                <i class="fas fa-users text-info"></i> 
+                                                <i class="fas fa-users text-info"></i>
                                                 {{ $tour->tour_members_count }}/{{ $tour->max_members }}
                                             </span>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="mt-3">
                                         @if($tour->tour_members_count < $tour->max_members && in_array($tour->status, ['upcoming', 'ongoing']))
                                             <a href="{{ route('member.show.register') }}" class="btn btn-primary w-100">
@@ -244,8 +244,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5><i class="fas fa-plane-departure"></i> Tour Management</h5>
-                    <p>Your trusted partner for amazing travel experiences.</p>
+                    <h5><i class="fas fa-plane-departure"></i> {{ $settings->app_name ?? 'Tour Management' }}</h5>
+                    <p>{{ $settings->app_slogan ?? 'Your trusted partner for amazing travel experiences.' }}</p>
                 </div>
                 <div class="col-md-4">
                     <h5>Quick Links</h5>
@@ -264,7 +264,7 @@
             </div>
             <hr class="border-secondary">
             <div class="text-center">
-                <p class="mb-0">&copy; {{ date('Y') }} Tour Management. All rights reserved.</p>
+                <p class="mb-0">&copy; {{ date('Y') }} {{ $settings->app_name ?? 'Tour Management' }}. All rights reserved.</p>
             </div>
         </div>
     </footer>

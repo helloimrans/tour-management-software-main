@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="logo-box">
-                    <img src="{{ asset('frontend/logo/logo.svg') }}" alt="Logo">
+                    <img src="{{ $settings->app_logo_url ?? asset('frontend/logo/logo.svg') }}" alt="{{ $settings->app_name ?? 'Logo' }}">
                 </div>
             </div>
             <div class="col-md-6 text-right">

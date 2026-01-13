@@ -7,7 +7,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-    <title> @yield('title') | Relaks Media</title>
+    <title>@yield('title') | {{ $settings->app_name ?? config('app.name', 'Tour Management') }}</title>
 
     {{-- google font --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">

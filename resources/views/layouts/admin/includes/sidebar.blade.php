@@ -2,10 +2,10 @@
     <a href="{{ url('/') }}" class="brand-link logo-switch pb-4 border-0">
         @auth
             <span class="logo-xl">
-                <img src="{{ asset('frontend/logo/logo.svg') }}" style="height: 55px; margin-left: 55px" alt="logo" />
+                <img src="{{ $settings->app_logo_url ?? asset('frontend/logo/logo.svg') }}" style="height: 55px; margin-left: 55px" alt="{{ $settings->app_name ?? 'Logo' }}" />
             </span>
             <span class="logo-xs">
-                <img src="{{ asset('frontend/logo/logo.svg') }}" width="90%" alt="logo" />
+                <img src="{{ $settings->app_logo_url ?? asset('frontend/logo/logo.svg') }}" width="90%" alt="{{ $settings->app_name ?? 'Logo' }}" />
             </span>
         @endauth
     </a>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tour Management - Home</title>
+    <title>{{ $settings->app_name ?? 'Tour Management' }} - Home</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -142,7 +142,7 @@
     <nav class="navbar navbar-expand-lg navbar-light navbar-custom fixed-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{{ route('landing') }}">
-                <i class="fas fa-plane-departure text-primary"></i> Tour Management
+                <i class="fas fa-plane-departure text-primary"></i> {{ $settings->app_name ?? 'Tour Management' }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -290,8 +290,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5><i class="fas fa-plane-departure"></i> Tour Management</h5>
-                    <p>Your trusted partner for amazing travel experiences.</p>
+                    <h5><i class="fas fa-plane-departure"></i> {{ $settings->app_name ?? 'Tour Management' }}</h5>
+                    <p>{{ $settings->app_slogan ?? 'Your trusted partner for amazing travel experiences.' }}</p>
                 </div>
                 <div class="col-md-4">
                     <h5>Quick Links</h5>
@@ -310,7 +310,7 @@
             </div>
             <hr class="border-secondary">
             <div class="text-center">
-                <p class="mb-0">&copy; {{ date('Y') }} Tour Management. All rights reserved.</p>
+                <p class="mb-0">&copy; {{ date('Y') }} {{ $settings->app_name ?? 'Tour Management' }}. All rights reserved.</p>
             </div>
         </div>
     </footer>
