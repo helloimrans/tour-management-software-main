@@ -5,8 +5,8 @@
         </li>
         @auth
         <li class="nav-item d-none d-sm-block">
-            <a class="nav-link" href="#">
-                All Tours
+            <a class="nav-link" href="{{ route('landing') }}" target="_blank" title="Go to Website">
+                <i class="fa-solid fa-globe"></i> Go To Website
             </a>
         </li>
         @endauth
