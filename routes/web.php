@@ -36,6 +36,7 @@ Route::post('check-old-password', [ValidationController::class, 'checkOldPasswor
 
 Route::group(['middleware' => ['web']], function () {
     Route::get('/', [LandingController::class, 'index'])->name('landing');
+    Route::get('/tours', [LandingController::class, 'tourListing'])->name('tours.listing');
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('admin.login');
     Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
@@ -103,13 +104,16 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
 });
 
 Route::group(['prefix' => 'member', 'as' => 'member.', 'middleware' => ['auth']], function () {
-    Route::get('/dashboard', [\App\Http\Controllers\MemberController::class, 'dashboard'])->name('dashboard');
-    Route::get('/profile', [\App\Http\Controllers\MemberController::class, 'showProfile'])->name('profile');
-    Route::put('/profile', [\App\Http\Controllers\MemberController::class, 'updateProfile'])->name('profile.update');
-    Route::get('/tours', [\App\Http\Controllers\MemberController::class, 'tours'])->name('tours');
-    Route::post('/join-tour/{tourId}', [\App\Http\Controllers\MemberController::class, 'joinTour'])->name('join-tour');
-    Route::get('/current-tour', [\App\Http\Controllers\MemberController::class, 'currentTour'])->name('current-tour');
-    Route::get('/tour-history', [\App\Http\Controllers\MemberController::class, 'tourHistory'])->name('tour-history');
+    Route::get('/dashboard', [MemberController::class, 'dashboard'])->name('dashboard');
+    Route::get('/profile', [MemberController::class, 'showProfile'])->name('profile');
+    Route::put('/profile', [MemberController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/tours', [MemberController::class, 'tours'])->name('tours');
+    Route::post('/join-tour/{tourId}', [MemberController::class, 'joinTour'])->name('join-tour');
+    Route::get('/current-tour', [MemberController::class, 'currentTour'])->name('current-tour');
+    Route::get('/tour-history', [MemberController::class, 'tourHistory'])->name('tour-history');
+    Route::get('/add-payment', [MemberController::class, 'showPaymentForm'])->name('add-payment');
+    Route::post('/add-payment', [MemberController::class, 'addPayment'])->name('payment.store');
+    Route::get('/payment-history', [MemberController::class, 'paymentHistory'])->name('payment-history');
 });
 
 

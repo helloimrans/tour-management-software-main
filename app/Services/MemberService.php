@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Tour;
+use App\Models\TourMember;
+use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -46,23 +48,36 @@ class MemberService
     public function getDashboardData(int $userId)
     {
         $user = User::findOrFail($userId);
-        $currentTour = $user->tour;
-        $tourHistory = User::where('id', $userId)
-            ->whereNotNull('tour_id')
+        
+        // Get current active tour membership
+        $currentTourMember = TourMember::where('user_id', $userId)
+            ->whereIn('join_status', ['pending', 'approved'])
             ->with('tour')
-            ->get();
+            ->latest()
+            ->first();
+            
+        // Count total tours joined
+        $totalTours = TourMember::where('user_id', $userId)->count();
+        
+        // Get total payments made
+        $totalPaid = Payment::where('user_id', $userId)->sum('amount');
 
         return [
             'user' => $user,
-            'currentTour' => $currentTour,
-            'totalTours' => $tourHistory->count(),
+            'currentTourMember' => $currentTourMember,
+            'currentTour' => $currentTourMember?->tour,
+            'totalTours' => $totalTours,
+            'totalPaid' => $totalPaid,
         ];
     }
 
     public function getAvailableTours()
     {
-        return Tour::where('status', 1)
+        return Tour::whereIn('status', ['upcoming', 'ongoing'])
             ->with('createdBy')
+            ->withCount(['tourMembers' => function($query) {
+                $query->where('join_status', 'approved');
+            }])
             ->latest()
             ->get();
     }
@@ -72,44 +87,113 @@ class MemberService
         $user = User::findOrFail($userId);
         $tour = Tour::findOrFail($tourId);
 
-        if ($tour->status != 1) {
+        if (!in_array($tour->status, ['upcoming', 'ongoing'])) {
             throw new \Exception('This tour is not available for joining.');
         }
 
-        if ($user->tour_id == $tourId) {
-            throw new \Exception('You are already in this tour.');
+        // Check if already joined
+        $existingMembership = TourMember::where('user_id', $userId)
+            ->where('tour_id', $tourId)
+            ->whereIn('join_status', ['pending', 'approved'])
+            ->first();
+
+        if ($existingMembership) {
+            throw new \Exception('You have already joined this tour.');
         }
 
-        $user->tour_id = $tourId;
-        $user->save();
+        // Check if tour is full
+        $approvedMembers = TourMember::where('tour_id', $tourId)
+            ->where('join_status', 'approved')
+            ->count();
 
-        return $user;
+        if ($approvedMembers >= $tour->max_members) {
+            throw new \Exception('This tour is full.');
+        }
+
+        // Create tour membership
+        $tourMember = TourMember::create([
+            'tour_id' => $tourId,
+            'user_id' => $userId,
+            'join_status' => 'pending',
+            'joined_at' => now(),
+            'created_by' => $userId,
+        ]);
+
+        return $tourMember;
     }
 
     public function getCurrentTour(int $userId)
     {
-        $user = User::with('tour')->findOrFail($userId);
+        $user = User::findOrFail($userId);
+        
+        $tourMember = TourMember::where('user_id', $userId)
+            ->whereIn('join_status', ['pending', 'approved'])
+            ->with(['tour.schedules', 'tour.tourMembers' => function($query) {
+                $query->where('join_status', 'approved')->with('user');
+            }])
+            ->latest()
+            ->first();
+
+        // Get payment summary for current tour
+        $paymentSummary = null;
+        if ($tourMember) {
+            $totalPaid = Payment::where('user_id', $userId)
+                ->where('tour_id', $tourMember->tour_id)
+                ->sum('amount');
+            
+            $remaining = $tourMember->tour->per_member_cost - $totalPaid;
+            
+            $paymentSummary = [
+                'total_cost' => $tourMember->tour->per_member_cost,
+                'total_paid' => $totalPaid,
+                'remaining' => max(0, $remaining),
+            ];
+        }
 
         return [
             'user' => $user,
-            'tour' => $user->tour,
+            'tourMember' => $tourMember,
+            'tour' => $tourMember?->tour,
+            'paymentSummary' => $paymentSummary,
         ];
     }
 
     public function getTourHistory(int $userId)
     {
-        $user = User::findOrFail($userId);
+        return TourMember::where('user_id', $userId)
+            ->with(['tour', 'tour.createdBy'])
+            ->orderBy('joined_at', 'desc')
+            ->get();
+    }
 
-        $tours = collect();
+    public function addPayment(int $userId, array $input)
+    {
+        // Verify tour membership
+        $tourMember = TourMember::where('user_id', $userId)
+            ->where('tour_id', $input['tour_id'])
+            ->whereIn('join_status', ['pending', 'approved'])
+            ->firstOrFail();
 
-        if ($user->tour_id) {
-            $currentTour = Tour::with('createdBy')->find($user->tour_id);
-            if ($currentTour) {
-                $tours->push($currentTour);
-            }
-        }
+        $input['user_id'] = $userId;
+        $input['created_by'] = $userId;
 
-        return $tours;
+        return Payment::create($input);
+    }
+
+    public function getPaymentHistory(int $userId)
+    {
+        return Payment::where('user_id', $userId)
+            ->with('tour')
+            ->orderBy('payment_date', 'desc')
+            ->get();
+    }
+
+    public function getMemberTours(int $userId)
+    {
+        return TourMember::where('user_id', $userId)
+            ->whereIn('join_status', ['pending', 'approved'])
+            ->with('tour')
+            ->get();
     }
 }
 

@@ -141,8 +141,45 @@ class MemberController extends Controller
 
     public function tourHistory()
     {
-        $data['tours'] = $this->memberService->getTourHistory(Auth::id());
+        $data['tourMembers'] = $this->memberService->getTourHistory(Auth::id());
         return view('member.tour-history', $data);
+    }
+
+    public function showPaymentForm()
+    {
+        $data['tours'] = $this->memberService->getMemberTours(Auth::id());
+        return view('member.add-payment', $data);
+    }
+
+    public function addPayment(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'tour_id' => ['required', 'integer', 'exists:tours,id'],
+                'amount' => ['required', 'numeric', 'min:0'],
+                'payment_method' => ['required', 'string', 'in:cash,bank,bkash,nagad'],
+                'transaction_number' => ['nullable', 'string', 'max:191'],
+                'payment_date' => ['required', 'date'],
+                'notes' => ['nullable', 'string'],
+            ]);
+
+            $this->memberService->addPayment(Auth::id(), $validatedData);
+
+            return redirect()->route('member.payment-history')->with([
+                'message' => 'Payment added successfully.',
+                'alert-type' => 'success',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
+        }
+    }
+
+    public function paymentHistory()
+    {
+        $data['payments'] = $this->memberService->getPaymentHistory(Auth::id());
+        return view('member.payment-history', $data);
     }
 }
 
