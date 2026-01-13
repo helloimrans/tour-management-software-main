@@ -159,7 +159,7 @@
                         <a class="nav-link btn btn-outline-primary ms-2" href="{{ route('member.show.register') }}">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-primary text-white ms-2" href="{{ route('login') }}">Login</a>
+                        <a class="nav-link btn btn-primary ms-2" href="{{ route('login') }}">Login</a>
                     </li>
                 </ul>
             </div>
