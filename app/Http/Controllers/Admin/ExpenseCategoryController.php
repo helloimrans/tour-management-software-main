@@ -17,6 +17,10 @@ class ExpenseCategoryController extends Controller
 
     public function index()
     {
+        if (!auth()->user()->hasPermission('expense-category-menu')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         if (request()->ajax()) {
             return $this->expenseCategoryService->datatable();
         }
@@ -26,7 +30,14 @@ class ExpenseCategoryController extends Controller
 
     public function store(Request $request)
     {
-        try {
+        if (!auth()->user()->hasPermission('expense-category-create')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized action.',
+            ], 403);
+        }
+
+        try{
             $validatedData = $request->validate([
                 'name' => ['required', 'string', 'max:191', 'unique:expense_categories,name'],
             ]);
@@ -53,6 +64,13 @@ class ExpenseCategoryController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if (!auth()->user()->hasPermission('expense-category-update')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized action.',
+            ], 403);
+        }
+
         try {
             $validatedData = $request->validate([
                 'name' => ['required', 'string', 'max:191', 'unique:expense_categories,name,' . $id],
@@ -80,6 +98,13 @@ class ExpenseCategoryController extends Controller
 
     public function destroy(string $id)
     {
+        if (!auth()->user()->hasPermission('expense-category-delete')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized action.',
+            ], 403);
+        }
+
         try {
             $this->expenseCategoryService->destroy($id);
 

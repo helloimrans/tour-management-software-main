@@ -11,6 +11,7 @@ class ExpenseCategoryService
 {
     public function datatable()
     {
+        $authUser = AuthHelper::getAuthUser();
         $data = ExpenseCategory::with('createdBy')->latest();
 
         return DataTables::of($data)
@@ -21,17 +22,26 @@ class ExpenseCategoryService
             ->editColumn('created_by', function ($row) {
                 return $row->createdBy->first_name . ' ' . $row->createdBy->last_name;
             })
-            ->addColumn('action', function ($row) {
-                return '
-                    <button type="button" class="btn btn-sm btn-primary edit-btn" 
-                        data-id="' . $row->id . '" 
-                        data-name="' . $row->name . '">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="' . $row->id . '">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                ';
+            ->addColumn('action', function ($row) use ($authUser) {
+                $actions = '';
+                
+                if ($authUser && $authUser->hasPermission('expense-category-update')) {
+                    $actions .= '
+                        <button type="button" class="btn btn-sm btn-primary edit-btn" 
+                            data-id="' . $row->id . '" 
+                            data-name="' . $row->name . '">
+                            <i class="fas fa-edit"></i>
+                        </button>';
+                }
+                
+                if ($authUser && $authUser->hasPermission('expense-category-delete')) {
+                    $actions .= '
+                        <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="' . $row->id . '">
+                            <i class="fas fa-trash"></i>
+                        </button>';
+                }
+                
+                return $actions ?: '-';
             })
             ->rawColumns(['action'])
             ->make(true);

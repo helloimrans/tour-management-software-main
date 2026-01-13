@@ -71,31 +71,8 @@ class LaratrustSeeder extends Seeder
 
         }
 
-        if (Config::get('laratrust_seeder.create_users')) {
-            $this->command->info("Creating '{$key}' user");
-
-            DB::table('users')->insert([
-                'id' => 1,
-                'first_name' => 'Admin',
-                'last_name' => '',
-                'email' => 'admin@gmail.com',
-                'phone' => '01755430927',
-                'user_type' => User::ADMIN_USER_CODE,
-                'password' => Hash::make('password')
-            ]);
-
-            DB::table('users')->insert([
-                'id' => 2,
-                'first_name' => 'Imran',
-                'last_name' => 'Ali',
-                'email' => 'imran@gmail.com',
-                'phone' => '01826763236',
-                'user_type' => User::NORMAL_USER_CODE,
-                'password' => Hash::make('password')
-            ]);
-            $user = \App\Models\User::find(1);
-            $user->addRole(1);
-        }
+        // Users will be created by UserSeeder instead
+        $this->command->info('Roles and Permissions created successfully!');
 
     }
 

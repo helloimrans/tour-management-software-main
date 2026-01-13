@@ -19,6 +19,10 @@ class MemberManagementController extends Controller
 
     public function index()
     {
+        if (!auth()->user()->hasPermission('member-management-menu')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         if (request()->ajax()) {
             return $this->memberManagementService->datatable();
         }
@@ -31,6 +35,10 @@ class MemberManagementController extends Controller
 
     public function addToTour(Request $request)
     {
+        if (!auth()->user()->hasPermission('member-management-create')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         try {
             $validatedData = $request->validate([
                 'tour_id' => ['required', 'exists:tours,id'],
@@ -58,6 +66,10 @@ class MemberManagementController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if (!auth()->user()->hasPermission('member-management-update')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         try {
             $validatedData = $request->validate([
                 'room_no' => ['nullable', 'string', 'max:50'],
@@ -82,6 +94,10 @@ class MemberManagementController extends Controller
 
     public function destroy(string $id)
     {
+        if (!auth()->user()->hasPermission('member-management-delete')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
         try {
             $this->memberManagementService->delete($id);
 

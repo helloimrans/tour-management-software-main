@@ -18,6 +18,10 @@ class TourScheduleController extends Controller
 
     public function index($tourId)
     {
+        if (!auth()->user()->hasPermission('tour-schedule-menu')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $tour = Tour::findOrFail($tourId);
 
         if (request()->ajax()) {
@@ -29,6 +33,13 @@ class TourScheduleController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth()->user()->hasPermission('tour-schedule-create')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized action.',
+            ], 403);
+        }
+
         try {
             $validatedData = $request->validate([
                 'tour_id' => ['required', 'exists:tours,id'],
@@ -59,6 +70,13 @@ class TourScheduleController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if (!auth()->user()->hasPermission('tour-schedule-update')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized action.',
+            ], 403);
+        }
+
         try {
             $validatedData = $request->validate([
                 'tour_id' => ['required', 'exists:tours,id'],
@@ -89,6 +107,13 @@ class TourScheduleController extends Controller
 
     public function destroy(string $id)
     {
+        if (!auth()->user()->hasPermission('tour-schedule-delete')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized action.',
+            ], 403);
+        }
+
         try {
             $this->tourScheduleService->destroy($id);
 

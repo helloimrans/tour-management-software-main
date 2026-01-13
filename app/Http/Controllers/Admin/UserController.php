@@ -22,4 +22,30 @@ class UserController extends Controller
 
         return view('admin.user.index');
     }
+
+    public function assignRole($id)
+    {
+        if (!auth()->user()->hasPermission('general-user-update')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized action.',
+            ], 403);
+        }
+
+        try {
+            $roles = request('roles', []);
+            $user = \App\Models\User::findOrFail($id);
+            $user->syncRoles($roles);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Role assigned successfully.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to assign role.',
+            ], 500);
+        }
+    }
 }

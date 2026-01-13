@@ -35,8 +35,19 @@ class UserService
                     <label class="custom-control-label" for="' . $switchId . '"></label>
                 </div>';
             })
-            ->addColumn('action', function ($row) {
-                return '';
+            ->addColumn('action', function ($row) use ($authUser) {
+                $actions = '';
+                
+                if ($authUser && $authUser->hasPermission('general-user-update')) {
+                    $actions .= '<button class="btn bg-gradient-primary btn-xs mx-1 edit-role-btn"
+                        data-id="' . $row->id . '"
+                        data-name="' . $row->first_name . ' ' . $row->last_name . '"
+                        data-roles=\'' . $row->roles->pluck('id')->toJson() . '\'>
+                        <i class="fa-solid fa-user-tag"></i> Assign Role
+                    </button>';
+                }
+                
+                return $actions ?: '-';
             })
             ->rawColumns(['action', 'status'])
             ->make(true);

@@ -26,9 +26,11 @@
                 <div class="card-header">
                     <h3 class="card-title">{{ $tour->name }} - Schedule</h3>
                     <div class="card-tools">
+                        @permission('tour-schedule-create')
                         <button type="button" class="btn btn-primary btn-sm" id="addScheduleBtn">
                             <i class="fas fa-plus"></i> Add Schedule
                         </button>
+                        @endpermission
                     </div>
                 </div>
                 <div class="card-body">

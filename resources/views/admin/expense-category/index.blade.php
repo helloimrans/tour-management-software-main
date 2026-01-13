@@ -25,9 +25,11 @@
                 <div class="card-header">
                     <h3 class="card-title">Manage Expense Categories</h3>
                     <div class="card-tools">
+                        @permission('expense-category-create')
                         <button type="button" class="btn btn-primary btn-sm" id="addCategoryBtn">
                             <i class="fas fa-plus"></i> Add Category
                         </button>
+                        @endpermission
                     </div>
                 </div>
                 <div class="card-body">

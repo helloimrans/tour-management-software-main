@@ -29,7 +29,7 @@
                     <div class="card dashboard-custom-card">
                         <div class="card-body">
                             <div class="custom-card-header d-flex justify-content-between">
-                                <h4>General User List</h4>
+                                <h4>Members List</h4>
                             </div>
                             <div class="table-responsive">
                                 <table class="table datatable custom-table dt-responsive nowrap">
@@ -117,4 +117,63 @@
     </script>
 
 @include('layouts.admin.includes.change-status', ['table' => 'users', 'column' => 'status'])
+
+<script>
+$(document).on('click', '.edit-role-btn', function() {
+    let userId = $(this).data('id');
+    let userName = $(this).data('name');
+    let userRoles = $(this).data('roles');
+    
+    Swal.fire({
+        title: 'Assign Role to ' + userName,
+        html: `
+            <form id="roleAssignForm">
+                <div class="form-group text-left">
+                    <label>Select Roles:</label>
+                    <select name="roles[]" class="form-control select2" multiple required>
+                        @foreach(\App\Models\Role::all() as $role)
+                        <option value="{{ $role->id }}">{{ ucfirst($role->name) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Assign',
+        cancelButtonText: 'Cancel',
+        preConfirm: () => {
+            const selectedRoles = $('#roleAssignForm select[name="roles[]"]').val();
+            if (!selectedRoles || selectedRoles.length === 0) {
+                Swal.showValidationMessage('Please select at least one role');
+                return false;
+            }
+            return selectedRoles;
+        },
+        didOpen: () => {
+            $('.select2').select2({
+                dropdownParent: $('.swal2-popup')
+            });
+            $('.select2').val(userRoles).trigger('change');
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/dashboard/general-users/' + userId + '/assign-role',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    roles: result.value
+                },
+                success: function(response) {
+                    toastr.success(response.message || 'Role assigned successfully');
+                    $('.datatable').DataTable().ajax.reload();
+                },
+                error: function(xhr) {
+                    toastr.error('Failed to assign role');
+                }
+            });
+        }
+    });
+});
+</script>
 @endpush

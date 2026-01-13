@@ -87,6 +87,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () {
     Route::put('/update-password', [UserController::class, 'updatePassword'])->name('update.password');
 
     Route::resource('general-users', UserController::class)->names('general.user');
+    Route::post('general-users/{id}/assign-role', [UserController::class, 'assignRole'])->name('general.user.assign-role');
     Route::resource('admin-users', AdminUserController::class)->names('admin.user');
 
     Route::resource('tours', TourController::class)->names('tour');

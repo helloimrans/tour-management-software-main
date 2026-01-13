@@ -12,6 +12,7 @@ class TourScheduleService
 {
     public function datatable($tourId)
     {
+        $authUser = AuthHelper::getAuthUser();
         $data = TourSchedule::where('tour_id', $tourId)
             ->with('createdBy')
             ->latest();
@@ -27,20 +28,29 @@ class TourScheduleService
             ->editColumn('details', function ($row) {
                 return $row->details ? \Str::limit($row->details, 50) : '--';
             })
-            ->addColumn('action', function ($row) {
-                return '
-                    <button type="button" class="btn btn-sm btn-primary edit-btn" 
-                        data-id="' . $row->id . '" 
-                        data-tour-id="' . $row->tour_id . '"
-                        data-date="' . $row->schedule_date->format('Y-m-d') . '" 
-                        data-title="' . $row->title . '" 
-                        data-details="' . ($row->details ?? '') . '">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="' . $row->id . '">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                ';
+            ->addColumn('action', function ($row) use ($authUser) {
+                $actions = '';
+                
+                if ($authUser && $authUser->hasPermission('tour-schedule-update')) {
+                    $actions .= '
+                        <button type="button" class="btn btn-sm btn-primary edit-btn" 
+                            data-id="' . $row->id . '" 
+                            data-tour-id="' . $row->tour_id . '"
+                            data-date="' . $row->schedule_date->format('Y-m-d') . '" 
+                            data-title="' . $row->title . '" 
+                            data-details="' . ($row->details ?? '') . '">
+                            <i class="fas fa-edit"></i>
+                        </button>';
+                }
+                
+                if ($authUser && $authUser->hasPermission('tour-schedule-delete')) {
+                    $actions .= '
+                        <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="' . $row->id . '">
+                            <i class="fas fa-trash"></i>
+                        </button>';
+                }
+                
+                return $actions ?: '-';
             })
             ->rawColumns(['action'])
             ->make(true);
