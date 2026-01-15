@@ -39,7 +39,7 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">
+                        <button type="submit" class="btn btn-filter w-100">
                             <i class="fas fa-search"></i> Search
                         </button>
                     </div>
@@ -99,13 +99,16 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-3">
+                                <div class="mt-3 d-flex gap-2">
+                                    <a href="{{ route('tours.details', $tour->id) }}" class="btn btn-view-details btn-sm">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
                                     @if($tour->tour_members_count < $tour->max_members && in_array($tour->status, ['upcoming', 'ongoing']))
-                                        <a href="{{ route('member.show.register') }}" class="btn btn-primary w-100">
+                                        <a href="{{ route('member.show.register') }}" class="btn btn-join-now btn-sm">
                                             <i class="fas fa-sign-in-alt"></i> Join Now
                                         </a>
                                     @else
-                                        <button class="btn btn-secondary w-100" disabled>
+                                        <button class="btn btn-secondary btn-sm" disabled>
                                             @if($tour->tour_members_count >= $tour->max_members)
                                                 <i class="fas fa-times-circle"></i> Full
                                             @else
@@ -129,7 +132,7 @@
                 <i class="fas fa-info-circle fa-3x mb-3"></i>
                 <h4>No tours found</h4>
                 <p>Try adjusting your search filters or check back later for new tours.</p>
-                <a href="{{ route('tours.listing') }}" class="btn btn-primary mt-3">Reset Filters</a>
+                <a href="{{ route('tours.listing') }}" class="btn btn-view-all mt-3">Reset Filters</a>
             </div>
         @endif
     </div>

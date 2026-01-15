@@ -39,6 +39,7 @@ Route::post('check-old-password', [ValidationController::class, 'checkOldPasswor
 Route::group(['middleware' => ['web']], function () {
     Route::get('/', [LandingController::class, 'index'])->name('landing');
     Route::get('/tours', [LandingController::class, 'tourListing'])->name('tours.listing');
+    Route::get('/tours/{id}', [LandingController::class, 'tourDetails'])->name('tours.details');
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login'])->name('admin.login');
     Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');

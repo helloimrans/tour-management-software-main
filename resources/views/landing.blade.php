@@ -55,34 +55,72 @@
 </section>
 
 @if($featuredTour)
-<section class="py-5 featured-tour-section">
+<section class="py-4 featured-tour-section">
     <div class="container">
         <div class="section-title">
             <h2>Featured Tour</h2>
             <p class="text-muted">Don't miss this amazing opportunity</p>
         </div>
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <img src="{{ $featuredTour->image_url }}" alt="{{ $featuredTour->name }}" class="img-fluid rounded shadow">
-            </div>
-            <div class="col-md-6">
-                <span class="badge bg-{{ $featuredTour->status == 'ongoing' ? 'success' : 'info' }} mb-3">{{ ucfirst($featuredTour->status) }}</span>
-                <h2>{{ $featuredTour->name }}</h2>
-                <p class="lead"><i class="fas fa-map-marker-alt text-danger"></i> {{ $featuredTour->destination }}</p>
-                <p>{{ $featuredTour->description }}</p>
-                <div class="mb-3">
-                    <i class="fas fa-calendar text-primary"></i>
-                    <strong>{{ $featuredTour->start_date->format('d M Y') }} - {{ $featuredTour->end_date->format('d M Y') }}</strong>
+        <div class="card featured-tour-card shadow-sm">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    <div class="position-relative">
+                        <img src="{{ $featuredTour->image_url }}" alt="{{ $featuredTour->name }}" class="img-fluid w-100 h-100" style="object-fit: cover; min-height: 300px;">
+                        <div class="position-absolute top-0 start-0 m-2">
+                            <span class="badge bg-{{ $featuredTour->status == 'ongoing' ? 'success' : 'info' }}">{{ ucfirst($featuredTour->status) }}</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <i class="fas fa-money-bill-wave text-success"></i>
-                    <strong class="text-success fs-4">৳{{ number_format($featuredTour->per_member_cost, 2) }}</strong> / person
+                <div class="col-md-7">
+                    <div class="card-body p-4">
+                        <h4 class="card-title mb-2">{{ $featuredTour->name }}</h4>
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-map-marker-alt text-danger"></i> {{ $featuredTour->destination }}
+                        </p>
+                        <p class="card-text small text-muted mb-3" style="line-height: 1.6;">
+                            {{ Str::limit($featuredTour->description, 200) }}
+                        </p>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6 col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-calendar text-primary me-2"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Date</small>
+                                        <strong class="small">{{ $featuredTour->start_date->format('d M') }} - {{ $featuredTour->end_date->format('d M Y') }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-money-bill-wave text-success me-2"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Price</small>
+                                        <strong class="text-success">৳{{ number_format($featuredTour->per_member_cost, 0) }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-users text-info me-2"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Members</small>
+                                        <strong>{{ $featuredTour->tour_members_count }}/{{ $featuredTour->max_members }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('tours.details', $featuredTour->id) }}" class="btn btn-view-details btn-sm">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                            @if($featuredTour->tour_members_count < $featuredTour->max_members && in_array($featuredTour->status, ['upcoming', 'ongoing']))
+                            <a href="{{ route('member.show.register') }}" class="btn btn-join-now btn-sm">
+                                <i class="fas fa-sign-in-alt"></i> Join Now
+                            </a>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <i class="fas fa-users text-info"></i>
-                    <strong>{{ $featuredTour->tour_members_count }} / {{ $featuredTour->max_members }}</strong> members joined
-                </div>
-                <a href="{{ route('member.show.register') }}" class="btn btn-lg btn-primary">Join This Tour</a>
             </div>
         </div>
     </div>
@@ -124,7 +162,7 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">
+                        <button type="submit" class="btn btn-filter w-100">
                             <i class="fas fa-search"></i> Search
                         </button>
                     </div>
@@ -185,13 +223,16 @@
                                     </div>
                                 </div>
 
-                                <div>
+                                <div class="d-flex gap-2">
+                                    <a href="{{ route('tours.details', $tour->id) }}" class="btn btn-view-details btn-sm">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
                                     @if($tour->tour_members_count < $tour->max_members && in_array($tour->status, ['upcoming', 'ongoing']))
-                                        <a href="{{ route('member.show.register') }}" class="btn btn-primary w-100">
+                                        <a href="{{ route('member.show.register') }}" class="btn btn-join-now btn-sm">
                                             <i class="fas fa-sign-in-alt"></i> Join Now
                                         </a>
                                     @else
-                                        <button class="btn btn-secondary w-100" disabled>
+                                        <button class="btn btn-secondary btn-sm" disabled>
                                             @if($tour->tour_members_count >= $tour->max_members)
                                                 <i class="fas fa-times-circle"></i> Full
                                             @else
@@ -207,14 +248,14 @@
                 @endforeach
             </div>
             <div class="text-center mt-4">
-                <a href="{{ route('tours.listing') }}" class="btn btn-lg btn-outline-primary">View All Tours</a>
+                <a href="{{ route('tours.listing') }}" class="btn btn-view-all">View All Tours</a>
             </div>
         @else
             <div class="alert alert-info text-center py-5">
                 <i class="fas fa-info-circle fa-3x mb-3"></i>
                 <h4>No tours found</h4>
                 <p>Try adjusting your search filters or check back later for new tours.</p>
-                <a href="{{ route('tours.listing') }}" class="btn btn-primary mt-3">View All Tours</a>
+                <a href="{{ route('tours.listing') }}" class="btn btn-view-all mt-3">View All Tours</a>
             </div>
         @endif
     </div>
@@ -251,7 +292,7 @@
             @endforeach
         </div>
         <div class="text-center mt-4">
-            <a href="{{ route('tours.listing') }}" class="btn btn-lg btn-outline-primary">View All Tours</a>
+                <a href="{{ route('tours.listing') }}" class="btn btn-view-all">View All Tours</a>
         </div>
     </div>
 </section>

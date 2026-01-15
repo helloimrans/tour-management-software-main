@@ -81,5 +81,18 @@ class LandingController extends Controller
 
         return view('tour-listing', $data);
     }
+
+    public function tourDetails($id)
+    {
+        $tour = Tour::withCount(['tourMembers' => function($q) {
+            $q->where('join_status', 'approved');
+        }])
+        ->with(['schedules' => function($query) {
+            $query->orderBy('schedule_date', 'asc');
+        }])
+        ->findOrFail($id);
+
+        return view('tour-details', compact('tour'));
+    }
 }
 
